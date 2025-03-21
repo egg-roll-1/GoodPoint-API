@@ -23,6 +23,8 @@ CREATE DATABASE eggroll;
 
 ## .env.local 생성
 
+package.json이 있는 경로에 `.env.local`이라는 파일을 생성해서 아래와 같이 입력해주시고, 빈칸은 적절히 넣어주세요!
+
 ```
 NODE_ENV=local
 
@@ -49,6 +51,7 @@ src
        └─ service
        └─ repository
        └─ entity
+       └─ exception
        └─ [feature.module.ts]
 
 └─ global: 공통적으로 필요한 프레임워크 설정이 들어갑니다.

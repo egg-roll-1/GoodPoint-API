@@ -1,16 +1,19 @@
 import { HttpException } from '@nestjs/common';
 import { ErrorInfo } from './code.exception';
-import { FieldError } from './field.exception';
+import { RequestFieldError } from './field.exception';
 
+/**
+ * 예외 응답 형식 정의
+ */
 export class ErrorResponse {
   status: number;
   code: string;
   message: string;
-  errors?: Array<FieldError>;
+  errors?: Array<RequestFieldError>;
 
   public static from(
     errorInfo: ErrorInfo,
-    errors: Array<FieldError> = undefined,
+    errors: Array<RequestFieldError> = undefined,
   ) {
     const result = new ErrorResponse();
     console.log('error info: ', errorInfo);

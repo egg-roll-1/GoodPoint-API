@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
-import { EGResponse } from '../result/result';
+import { EGResponse } from '../result/response.result';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {

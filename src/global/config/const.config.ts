@@ -1,3 +1,5 @@
+/** .env에 들어가는 키 목록 정의 */
+
 export const NODE_ENV = 'NODE_ENV';
 
 export const DB_DATABASE = 'DB_DATABASE';

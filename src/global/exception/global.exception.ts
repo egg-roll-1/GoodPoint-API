@@ -1,6 +1,9 @@
 import { HttpStatus } from '@nestjs/common';
 import { ErrorInfo } from './code.exception';
 
+/**
+ * Global 예외 정의
+ */
 export class GlobalException {
   static readonly SERVER_ERROR: ErrorInfo = {
     status: HttpStatus.INTERNAL_SERVER_ERROR,

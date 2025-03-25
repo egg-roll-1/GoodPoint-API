@@ -1,10 +1,12 @@
+import { Builder } from 'builder-pattern';
+import { VolunteerHistory } from 'src/domain/volunteer-history/entity/volunteer-history.entity';
+import { VolunteerRequest } from 'src/domain/volunteer-request/entity/volunteer-request.entity';
+import { EGBaseEntity } from 'src/global/entity/base.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Gender, Interest } from './user.enum';
-import { VolunteerRequest } from 'src/domain/volunteer-request/entity/volunteer-request.entity';
-import { VolunteerHistory } from 'src/domain/volunteer-history/entity/volunteer-history.entity';
 
 @Entity({ name: 'user' })
-export class User {
+export class User extends EGBaseEntity {
   @PrimaryGeneratedColumn({ name: 'user_id' })
   id: number;
 
@@ -32,4 +34,26 @@ export class User {
 
   @OneToMany(() => VolunteerHistory, (history) => history.user)
   volunteerHistoryList: VolunteerHistory[];
+
+  /** 생성 메서드 */
+  private static builder() {
+    return Builder(User);
+  }
+
+  static create(
+    object: Pick<
+      User,
+      'id' | 'name' | 'phoneNumber' | 'password' | 'age' | 'gender' | 'interest'
+    >,
+  ) {
+    return User.builder()
+      .id(object.id)
+      .name(object.name)
+      .phoneNumber(object.phoneNumber)
+      .password(object.password)
+      .age(object.age)
+      .gender(object.gender)
+      .interest(object.interest)
+      .build();
+  }
 }

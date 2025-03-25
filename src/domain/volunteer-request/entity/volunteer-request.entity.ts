@@ -1,4 +1,6 @@
 import { User } from 'src/domain/user/entity/user.entity';
+import { VolunteerWork } from 'src/domain/volunteer-work/entity/volunteer-work.entity';
+import { EGBaseEntity } from 'src/global/entity/base.entity';
 import {
   Column,
   Entity,
@@ -7,10 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { VolunteerWorkStatus } from './volunteer-request.enum';
-import { VolunteerWork } from 'src/domain/volunteer-work/entity/volunteer-work.entity';
 
 @Entity({ name: 'volunteer_request' })
-export class VolunteerRequest {
+export class VolunteerRequest extends EGBaseEntity {
   @PrimaryGeneratedColumn({ name: 'user_volunteer_work' })
   userVolunteerWork: number;
 

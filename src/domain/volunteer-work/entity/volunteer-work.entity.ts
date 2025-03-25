@@ -1,5 +1,7 @@
 import { Agency } from 'src/domain/agency/entity/agency.entity';
+import { VolunteerHistory } from 'src/domain/volunteer-history/entity/volunteer-history.entity';
 import { VolunteerRequest } from 'src/domain/volunteer-request/entity/volunteer-request.entity';
+import { EGBaseEntity } from 'src/global/entity/base.entity';
 import { DayOfWeek } from 'src/global/enum/day.enum';
 import {
   Column,
@@ -11,7 +13,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'volunteer_work' })
-export class VolunteerWork {
+export class VolunteerWork extends EGBaseEntity {
   @PrimaryGeneratedColumn({ name: 'volunteer_work_id' })
   id: number;
 
@@ -53,6 +55,12 @@ export class VolunteerWork {
   @JoinColumn({ name: 'agency_id' })
   agency: Agency;
 
+  @Column({ name: 'agency_id', nullable: true })
+  agencyId: number;
+
   @OneToMany(() => VolunteerRequest, (request) => request.volunteerWork)
   volunteerRequestList: VolunteerRequest[];
+
+  @OneToMany(() => VolunteerHistory, (history) => history.volunteerWork)
+  volunteerHistoryList: VolunteerHistory[];
 }

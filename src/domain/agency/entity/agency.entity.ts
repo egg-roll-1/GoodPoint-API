@@ -1,8 +1,9 @@
 import { VolunteerWork } from 'src/domain/volunteer-work/entity/volunteer-work.entity';
+import { EGBaseEntity } from 'src/global/entity/base.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'agency' })
-export class Agency {
+export class Agency extends EGBaseEntity {
   @PrimaryGeneratedColumn({ name: 'agency_id' })
   id: number;
 

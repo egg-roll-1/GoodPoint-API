@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/domain/user/entity/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { VolunteerHistoryStatus } from './volunteer-history.enum';
 
 @Entity({ name: 'volunteer_history' })
@@ -14,4 +21,9 @@ export class VolunteerHistory {
 
   @Column({ name: 'volunteer_work_id', nullable: true })
   volunteerWorkId: number;
+
+  /*연관관계*/
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }

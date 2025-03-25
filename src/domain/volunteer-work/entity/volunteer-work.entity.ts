@@ -1,5 +1,12 @@
+import { Agency } from 'src/domain/agency/entity/agency.entity';
 import { DayOfWeek } from 'src/global/enum/day.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'volunteer_work' })
 export class VolunteerWork {
@@ -38,4 +45,8 @@ export class VolunteerWork {
 
   @Column({ name: 'work_place' })
   workPlace: string;
+
+  @ManyToOne(() => Agency)
+  @JoinColumn({ name: 'agency_id' })
+  agency: Agency;
 }

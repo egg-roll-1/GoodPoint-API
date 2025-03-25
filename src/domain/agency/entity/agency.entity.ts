@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { VolunteerWork } from 'src/domain/volunteer-work/entity/volunteer-work.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'agency' })
 export class Agency {
@@ -22,4 +23,7 @@ export class Agency {
 
   @Column({ name: 'max_people_count' })
   maxPeopleCount: number;
+
+  @OneToMany(() => VolunteerWork, (work) => work.agency)
+  volunteerWork: VolunteerWork[];
 }

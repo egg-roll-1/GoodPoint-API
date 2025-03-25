@@ -17,11 +17,10 @@ export class User {
 
   @Column({ name: 'age' })
   age: number;
-  
+
   @Column({ name: 'gender' })
   gender: Gender;
 
   @Column({ name: 'interest' })
   interest: Interest;
-  
 }

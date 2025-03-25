@@ -7,7 +7,6 @@ import { UserService } from '../service/user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
- 
   @Get('/not-found')
   notFoundTest() {
     throw new EGException(UserException.NOT_FOUND);

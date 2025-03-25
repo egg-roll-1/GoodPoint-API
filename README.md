@@ -5,6 +5,7 @@
 ```
 npm run start:dev
 ALT+SHIFT+O: import 정리
+git pull --rebase
 ```
 
 ## Application

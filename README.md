@@ -1,5 +1,12 @@
 # Eggroll API Server
 
+## Sheet
+
+```
+npm run start:dev
+ALT+SHIFT+O: import 정리
+```
+
 ## Application
 
 ```

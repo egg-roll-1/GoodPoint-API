@@ -7,14 +7,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { VolunteerWorkStatus } from './volunteer-request.enum';
+import { VolunteerWork } from 'src/domain/volunteer-work/entity/volunteer-work.entity';
 
 @Entity({ name: 'volunteer_request' })
 export class VolunteerRequest {
   @PrimaryGeneratedColumn({ name: 'user_volunteer_work' })
   userVolunteerWork: number;
-
-  @Column({ name: 'volunteer_work_id' })
-  volunteerWorkId: number;
 
   @Column({ name: 'status' })
   status: VolunteerWorkStatus;
@@ -26,4 +24,11 @@ export class VolunteerRequest {
 
   @Column({ name: 'user_id', nullable: true })
   userId: number;
+
+  @ManyToOne(() => VolunteerWork)
+  @JoinColumn({ name: 'volunteer_work_id' })
+  volunteerWork: VolunteerWork;
+
+  @Column({ name: 'volunteer_work_id', nullable: true })
+  volunteerWorkId: number;
 }

@@ -1,10 +1,12 @@
 import { Agency } from 'src/domain/agency/entity/agency.entity';
+import { VolunteerRequest } from 'src/domain/volunteer-request/entity/volunteer-request.entity';
 import { DayOfWeek } from 'src/global/enum/day.enum';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -46,7 +48,11 @@ export class VolunteerWork {
   @Column({ name: 'work_place' })
   workPlace: string;
 
+  /** 연관관계 */
   @ManyToOne(() => Agency)
   @JoinColumn({ name: 'agency_id' })
   agency: Agency;
+
+  @OneToMany(() => VolunteerRequest, (request) => request.volunteerWork)
+  volunteerRequestList: VolunteerRequest[];
 }

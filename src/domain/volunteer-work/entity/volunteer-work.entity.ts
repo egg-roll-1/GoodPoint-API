@@ -1,9 +1,12 @@
 import { DayOfWeek } from 'src/global/enum/day.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'volunteer-work' })
+@Entity({ name: 'volunteer_work' })
 export class VolunteerWork {
-  @PrimaryGeneratedColumn({ name: 'start_date' })
+  @PrimaryGeneratedColumn({ name: 'volunteer_work_id' })
+  id: number;
+
+  @Column({ name: 'start_date' })
   startDate: Date;
 
   @Column({ name: 'end_date' })

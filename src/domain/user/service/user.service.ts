@@ -8,13 +8,18 @@ export class UserService {
 
   async getHello() {
     const user: User = {
-      id: undefined,
-      name: '홍길동',
+      id: undefined,      name: '홍길동',
       email: new Date().toJSON(),
       password: new Date().toJSON(),
     };
 
-    await this.userRepository.save(user);
-    return 'hello user service';
+    // 3
+    /**
+     * 1. 
+     */
+
+    const u = await this.userRepository.save(user);
+    
+    return u;
   }
 }

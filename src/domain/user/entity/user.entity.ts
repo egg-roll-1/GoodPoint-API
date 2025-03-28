@@ -2,7 +2,13 @@ import { Builder } from 'builder-pattern';
 import { VolunteerHistory } from 'src/domain/volunteer-history/entity/volunteer-history.entity';
 import { VolunteerRequest } from 'src/domain/volunteer-request/entity/volunteer-request.entity';
 import { EGBaseEntity } from 'src/global/entity/base.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Gender, Interest } from './user.enum';
 
 @Entity({ name: 'user' })
@@ -13,6 +19,7 @@ export class User extends EGBaseEntity {
   @Column({ name: 'name' })
   name: string;
 
+  @Index()
   @Column({ name: 'phone_number' })
   phoneNumber: string;
 
@@ -25,8 +32,21 @@ export class User extends EGBaseEntity {
   @Column({ name: 'gender' })
   gender: Gender;
 
-  @Column({ name: 'interest' })
-  interest: Interest;
+  @Column({ name: 'interest', nullable: true })
+  _interest: string;
+
+  /** Setter/Getter */
+  set interest(interestList: Interest[]) {
+    this._interest = interestList.join(',');
+  }
+
+  get interest() {
+    if (!this._interest) {
+      return [];
+    }
+
+    return this._interest.split(',').map((x) => x as Interest);
+  }
 
   /** 봉사활동 신청 내역 */
   @OneToMany(() => VolunteerRequest, (request) => request.user)
@@ -43,8 +63,9 @@ export class User extends EGBaseEntity {
   static create(
     object: Pick<
       User,
-      'id' | 'name' | 'phoneNumber' | 'password' | 'age' | 'gender' | 'interest'
-    >,
+      'name' | 'phoneNumber' | 'password' | 'age' | 'gender' | 'interest'
+    > &
+      Partial<User>,
   ) {
     return User.builder()
       .id(object.id)

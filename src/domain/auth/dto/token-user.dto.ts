@@ -1,7 +1,9 @@
+import { Builder } from 'builder-pattern';
+
 export class TokenUserDto {
   id: number;
 
-  constructor(id: number) {
-    this.id = id;
+  static createOne(object: Pick<TokenUserDto, 'id'>) {
+    return Builder(TokenUserDto).id(object.id).build();
   }
 }

@@ -3,8 +3,8 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../decorator/public.decorator';
 import { LoginRequest } from '../dto/request/login.request';
 import { SignUpRequest } from '../dto/request/signup.request';
-import { AuthService } from '../service/auth.service';
 import { LoginResponse } from '../dto/response/login.response';
+import { AuthService } from '../service/auth.service';
 
 @ApiTags('Auth API')
 @Controller('auth')

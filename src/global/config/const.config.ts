@@ -7,3 +7,7 @@ export const DB_HOST = 'DB_HOST';
 export const DB_USER = 'DB_USER';
 export const DB_PASSWORD = 'DB_PASSWORD';
 export const DB_PORT = 'DB_PORT';
+
+export const ACCESS_TOKEN_KEY = 'ACCESS_TOKEN_KEY';
+export const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN_KEY';
+export const SALT_ROUND = 'SALT_ROUND';

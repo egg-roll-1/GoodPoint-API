@@ -1,9 +1,10 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { json, urlencoded } from 'express';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { AppModule } from './app.module';
 import { formatErrors } from './global/exception/validation.exception';
+import { JwtAuthGuard } from './domain/auth/guard/jwt.guard';
 
 async function bootstrap() {
   initializeTransactionalContext();
@@ -20,6 +21,8 @@ bootstrap();
  * @param app
  */
 const initializeApplication = async (app: INestApplication) => {
+  app.useGlobalGuards(new JwtAuthGuard(app.get(Reflector)));
+
   // Validation pipeline
   // https://docs.nestjs.com/pipes
   app.useGlobalPipes(

@@ -1,22 +1,28 @@
 import { Builder } from 'builder-pattern';
 import { Agency } from '../../entity/agency.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AgencyResponse {
+  @ApiProperty({ description: '봉사기관 ID' })
   id: number;
 
+  @ApiProperty({ description: '봉사기관명' })
   title: string;
 
+  @ApiProperty({ description: '봉사기관 유형' })
   type: string;
 
+  @ApiProperty({ description: '봉사기관 - 연락처' })
   phoneNumber: string;
 
+  @ApiProperty({ description: '봉사기관 - 관리자명' })
   managerName: string;
 
+  @ApiProperty({ description: '봉사기관 - 이메일' })
   email: string;
 
+  @ApiProperty({ description: '봉사기관 - 최대인원' })
   maxPeopleCount: number;
-
-  //   volunteerWork: VolunteerWork[];
 
   static from(entity: Agency) {
     const dto = Builder(AgencyResponse)

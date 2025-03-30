@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 import { User } from 'src/domain/user/entity/user.entity';
-import { Gender, Interest } from 'src/domain/user/entity/user.enum';
+import { Gender } from 'src/domain/user/entity/user.enum';
+import { Interest } from 'src/global/enum/interest.enum';
 
 export class SignUpRequest {
   @ApiProperty({ description: '전화번호' })

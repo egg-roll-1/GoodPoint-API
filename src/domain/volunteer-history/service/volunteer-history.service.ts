@@ -4,5 +4,4 @@ import { VolunteerHistoryRepository } from '../repository/volunteer-history.repo
 @Injectable()
 export class VolunteerHistoryService {
   constructor(private volunteerHistoryRepository: VolunteerHistoryRepository) {}
-  async test() {}
 }

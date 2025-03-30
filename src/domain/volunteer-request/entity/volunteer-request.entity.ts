@@ -8,15 +8,15 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { VolunteerWorkStatus } from './volunteer-request.enum';
+import { VolunteerRequestStatus } from './volunteer-request.enum';
 
 @Entity({ name: 'volunteer_request' })
 export class VolunteerRequest extends EGBaseEntity {
-  @PrimaryGeneratedColumn({ name: 'user_volunteer_work' })
-  userVolunteerWork: number;
+  @PrimaryGeneratedColumn({ name: 'volunteer_request_id' })
+  id: number;
 
-  @Column({ name: 'status' })
-  status: VolunteerWorkStatus;
+  @Column({ name: 'status', default: VolunteerRequestStatus.Wait })
+  status: VolunteerRequestStatus;
 
   /** 연관관계 */
   @ManyToOne(() => User)

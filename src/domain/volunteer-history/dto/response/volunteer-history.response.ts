@@ -7,8 +7,6 @@ export class VolunteerHistoryResponse {
 
   status: VolunteerHistoryStatus;
 
-  //   volunteerWork: VolunteerWork[];
-
   static from(entity: VolunteerHistory) {
     const dto = Builder(VolunteerHistoryResponse)
       .id(entity.id)

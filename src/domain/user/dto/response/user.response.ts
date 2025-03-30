@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Builder } from 'builder-pattern';
 import { User } from '../../entity/user.entity';
-import { Gender, Interest } from '../../entity/user.enum';
+import { Gender } from '../../entity/user.enum';
+import { Interest } from '../../../../global/enum/interest.enum';
 
 export class UserResponse {
   @ApiProperty({ description: '사용자 ID' })

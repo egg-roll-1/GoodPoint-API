@@ -9,7 +9,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Gender, Interest } from './user.enum';
+import { Gender } from './user.enum';
+import { Interest } from '../../../global/enum/interest.enum';
 
 @Entity({ name: 'user' })
 export class User extends EGBaseEntity {

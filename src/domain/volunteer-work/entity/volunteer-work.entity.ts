@@ -1,4 +1,5 @@
 import { Agency } from 'src/domain/agency/entity/agency.entity';
+import { Interest } from 'src/global/enum/interest.enum';
 import { VolunteerHistory } from 'src/domain/volunteer-history/entity/volunteer-history.entity';
 import { VolunteerRequest } from 'src/domain/volunteer-request/entity/volunteer-request.entity';
 import { EGBaseEntity } from 'src/global/entity/base.entity';
@@ -11,6 +12,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { RecruitTargetType, VolunteerWorkStatus } from './volunteer-work.enum';
 
 @Entity({ name: 'volunteer_work' })
 export class VolunteerWork extends EGBaseEntity {
@@ -29,8 +31,8 @@ export class VolunteerWork extends EGBaseEntity {
   @Column({ name: 'recruit_end_date' })
   recruitEndDate: Date;
 
-  @Column({ name: 'day_of_week' })
-  dayOfWeek: DayOfWeek;
+  @Column({ name: 'day_of_week_list', nullable: true })
+  _dayOfWeek: string;
 
   @Column({ name: 'people_count' })
   peopleCount: number;
@@ -38,17 +40,37 @@ export class VolunteerWork extends EGBaseEntity {
   @Column({ name: 'recruit_people_count' })
   recruitPeopleCount: number;
 
-  @Column({ name: 'type' })
-  type: string;
+  @Column({ name: 'interest' })
+  interest: Interest;
 
-  @Column({ name: 'user_type' })
-  userType: string;
+  @Column({ name: 'target_type' })
+  targetType: RecruitTargetType;
 
   @Column({ name: 'work_address' })
   workAddress: string;
 
   @Column({ name: 'work_place' })
   workPlace: string;
+
+  @Column({ name: 'status', default: VolunteerWorkStatus.Recruiting })
+  status: VolunteerWorkStatus;
+
+  @Column({ name: 'latitude' })
+  latitude: string;
+
+  @Column({ name: 'longitude' })
+  longitude: string;
+
+  /** Getter/Setter */
+  set dayOfWeek(dayOfWeekList: DayOfWeek[]) {
+    this._dayOfWeek = dayOfWeekList.join(',');
+  }
+
+  get dayOfWeek() {
+    return this._dayOfWeek
+      ? (this._dayOfWeek.split(',') as unknown as DayOfWeek[])
+      : [];
+  }
 
   /** 연관관계 */
   @ManyToOne(() => Agency)

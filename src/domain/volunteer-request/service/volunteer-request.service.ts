@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { VolunteerRequestRepository } from '../repository/volunteer-request.repository';
-import { Transactional } from 'typeorm-transactional';
+import { VolunteerWorkStatus } from 'src/domain/volunteer-work/entity/volunteer-work.enum';
+import { VolunteerWorkException } from 'src/domain/volunteer-work/exception/volunteer-work.exception';
 import { VolunteerWorkRepository } from 'src/domain/volunteer-work/repository/volunteer-work.repository';
 import { EGException } from 'src/global/exception/exception';
-import { VolunteerWorkException } from 'src/domain/volunteer-work/exception/volunteer-work.exception';
-import { VolunteerWorkStatus } from 'src/domain/volunteer-work/entity/volunteer-work.enum';
+import { Transactional } from 'typeorm-transactional';
 import { VolunteerApplyRequest } from '../dto/request/volunteer-request.request';
+import { VolunteerRequestRepository } from '../repository/volunteer-request.repository';
 
 @Injectable()
 export class VolunteerRequestService {
   constructor(
+    //생성자
     private readonly volunteerWorkRepository: VolunteerWorkRepository,
     private readonly volunteerRequestRepository: VolunteerRequestRepository,
   ) {}
@@ -19,6 +20,9 @@ export class VolunteerRequestService {
    * @param userId
    * @returns
    */
+  //
+
+  // Repository.find를 하면 디비에서 select를 한다.
   async getVolunteerRequestList(userId: number) {
     return await this.volunteerRequestRepository.find({
       relations: {
@@ -48,7 +52,7 @@ export class VolunteerRequestService {
       .catch(() => {
         throw new EGException(VolunteerWorkException.NOT_FOUND);
       });
-
+    //모집상태확인
     if (volunteerWork.status != VolunteerWorkStatus.Recruiting) {
       throw new EGException(VolunteerWorkException.CANNOT_APPLY_STATUS);
     }
@@ -56,7 +60,28 @@ export class VolunteerRequestService {
     /** todo 봉사활동신청내역 생성 */
 
     // 1. 이미 신청한 내역이 존재하는 경우 - 이미 신청했습니다 예외
+    const alreadyApplied = await this.volunteerRequestRepository.findOne({
+      where: {
+        userId,
+        volunteerWork: { id: volunteerWorkId },
+      },
+    });
+
+    if (alreadyApplied) {
+      throw new EGException({
+        code: 'VRE001',
+        message: '이미 신청한 봉사활동입니다.',
+        status: 400,
+      });
+    }
+
     // 2. 봉사활동신청(VolunteerRequest) 엔티티 객체 생성
+    const volunteerRequest = this.volunteerRequestRepository.create({
+      userId,
+      volunteerWork,
+    });
+
     // 3. 2에서 만든 엔티티 저장 save
+    await this.volunteerRequestRepository.save(volunteerRequest);
   }
 }

@@ -4,7 +4,7 @@ export enum Gender {
 }
 
 export enum Authority {
-  VOLUNTEER = 'ROLE_VOLUNTEER',
-  PROVIDER = 'ROLE_PROVIDER',
+  ROLE_USER = 'ROLE_USER',
+  ROLE_MANAGER = 'ROLE_MANAGER',
   ADMIN = 'ROLE_ADMIN',
 }

@@ -1,3 +1,4 @@
+import { Manager } from '@core/domain/manager/entity/manager.entity';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { VolunteerWork } from 'libs/core/src/domain/volunteer-work/entity/volunteer-work.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
@@ -27,4 +28,7 @@ export class Agency extends EGBaseEntity {
 
   @OneToMany(() => VolunteerWork, (work) => work.agency)
   volunteerWork: VolunteerWork[];
+
+  @OneToMany(() => Manager, (manager) => manager.agency)
+  managerList: Manager[];
 }

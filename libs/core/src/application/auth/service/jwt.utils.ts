@@ -49,13 +49,13 @@ export class JwtUtils {
   }
 
   public async verifyAccessTokenWithExpiration(token: string) {
-    return await this.jwtService.verifyAsync(token, {
+    return await this.jwtService.verifyAsync<TokenUserDto>(token, {
       secret: this.ACCESS_TOKEN_KEY,
     });
   }
 
   public async verifyAccessTokenWithoutExpiration(token: string) {
-    return await this.jwtService.verifyAsync(token, {
+    return await this.jwtService.verifyAsync<TokenUserDto>(token, {
       secret: this.ACCESS_TOKEN_KEY,
       ignoreExpiration: true,
     });

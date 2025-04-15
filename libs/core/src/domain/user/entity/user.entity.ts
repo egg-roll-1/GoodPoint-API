@@ -1,5 +1,5 @@
-import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Interest } from '@core/domain/enum/interest.enum';
+import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Builder } from 'builder-pattern';
 import { VolunteerHistory } from 'libs/core/src/domain/volunteer-history/entity/volunteer-history.entity';
 import { VolunteerRequest } from 'libs/core/src/domain/volunteer-request/entity/volunteer-request.entity';
@@ -33,8 +33,8 @@ export class User extends EGBaseEntity {
   @Column({ name: 'gender' })
   gender: Gender;
 
-  @Column({ name: 'authority' })
-  authority: Authority;
+  @Column({ name: 'authority', default: Authority.ROLE_USER })
+  authority: Authority = Authority.ROLE_USER;
 
   @Column({ name: 'interest', nullable: true })
   _interest: string;

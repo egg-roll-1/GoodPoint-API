@@ -2,16 +2,19 @@ import {
   initializeApplication,
   initializeBeforeApplication,
 } from '@core/global/utils/init';
-import { NestFactory } from '@nestjs/core';
-import { UserAppModule } from './app.module';
 import { INestApplication } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { UserAppModule } from './app.module';
+import { JwtAuthGuard } from './auth/guard/jwt.guard';
 
 async function bootstrap() {
   initializeBeforeApplication();
   const app = await NestFactory.create(UserAppModule);
   initializeApplication(app);
   initializeSwagger(app);
+
+  app.useGlobalGuards(new JwtAuthGuard(app.get(Reflector)));
 
   await app.listen(3000);
 }

@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       const token = await this.jwtUtils.extractAccessTokenFromHeader(req);
       const user = await this.jwtUtils.verifyAccessTokenWithExpiration(token);
 
-      if (user.authority === Authority.ROLE_MANAGER) {
+      if (user.authority === Authority.ROLE_USER) {
         throw new EGException(AuthException.UN_AUTHORIZED);
       }
 
@@ -27,6 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       if (error instanceof EGException) {
         throw error;
       }
+
       if (error?.message === 'jwt expired') {
         throw new EGException(AuthException.EXPIRED_JWT);
       }

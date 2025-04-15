@@ -4,5 +4,4 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AgencyService {
   constructor(private agencyRepository: AgencyRepository) {}
-  async test() {}
 }

@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build:admin-api
+RUN npm run build:manager-api
 
-CMD npm run admin-api:dev
+CMD npm run manager-api:dev

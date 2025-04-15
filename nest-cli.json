@@ -37,13 +37,13 @@
         ]
       }
     },
-    "admin-api": {
+    "manager-api": {
       "type": "application",
-      "root": "apps/admin-api",
+      "root": "apps/manager-api",
       "entryFile": "main",
-      "sourceRoot": "apps/admin-api/src",
+      "sourceRoot": "apps/manager-api/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/admin-api/tsconfig.app.json",
+        "tsConfigPath": "apps/manager-api/tsconfig.app.json",
         "plugins": [
           {
             "name": "@nestjs/swagger",

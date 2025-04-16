@@ -1,3 +1,4 @@
+import { Agency } from '@core/domain/agency/entity/agency.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
@@ -43,4 +44,8 @@ export class PostAgencyRequest {
   @Min(1)
   @IsInt()
   maxPeopleCount: number;
+
+  toEntity(ownerManagerId: number) {
+    return Agency.createOne({ ...this, ownerManagerId });
+  }
 }

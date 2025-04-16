@@ -13,6 +13,12 @@ export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사활동 종료일' })
   endDate: Date;
 
+  @ApiProperty({ description: '봉사활동 시작시간' })
+  startMinute: number;
+
+  @ApiProperty({ description: '봉사활동 종료시간' })
+  endMinute: number;
+
   @ApiProperty({ description: '봉사활동 모집 시작일' })
   recruitStartDate: Date;
 
@@ -58,6 +64,8 @@ export class VolunteerWorkResponse {
       .id(volunteerWork.id)
       .startDate(volunteerWork.startDate)
       .endDate(volunteerWork.endDate)
+      .startMinute(volunteerWork.startMinute)
+      .endMinute(volunteerWork.endMinute)
       .recruitStartDate(volunteerWork.recruitStartDate)
       .recruitEndDate(volunteerWork.recruitEndDate)
       .dayOfWeek(volunteerWork.dayOfWeek)

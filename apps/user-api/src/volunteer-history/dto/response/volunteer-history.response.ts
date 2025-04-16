@@ -4,7 +4,6 @@ import { Builder } from 'builder-pattern';
 
 export class VolunteerHistoryResponse {
   id: number;
-
   status: VolunteerHistoryStatus;
 
   static from(entity: VolunteerHistory) {

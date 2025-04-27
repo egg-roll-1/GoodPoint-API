@@ -1,5 +1,6 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
 import { Interest } from '@core/domain/enum/interest.enum';
+import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
 import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
 import { TargetType } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { ApiProperty } from '@nestjs/swagger';
@@ -15,8 +16,9 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { VolunteerRequestResponse } from './volunteer-request.response';
 
-export class VolunteerWorkResponse {
+export class VolunteerWorkDetailResponse {
   @ApiProperty({ description: '봉사활동 ID' })
   id: number;
 
@@ -71,6 +73,9 @@ export class VolunteerWorkResponse {
   @Min(0)
   recruitPeopleCount: number;
 
+  @ApiProperty({ description: '현재 신청한 봉사활동 인원' })
+  currentPeopleCont: number;
+
   @ApiProperty({ description: '봉사 안내' })
   @MaxLength(1000)
   @IsString()
@@ -95,8 +100,20 @@ export class VolunteerWorkResponse {
   @IsString()
   workPlace: string;
 
-  static from(volunteerWork: VolunteerWork) {
-    return Builder(VolunteerWorkResponse)
+  @ApiProperty({
+    description: '신청자 목록',
+    type: VolunteerRequestResponse,
+    isArray: true,
+  })
+  requestList: VolunteerRequestResponse[];
+
+  static async from(volunteerWork: VolunteerWork) {
+    const ignoreRequestStatus = new Set([
+      VolunteerRequestStatus.Canceled,
+      VolunteerRequestStatus.Reject,
+    ]);
+
+    return Builder(VolunteerWorkDetailResponse)
       .id(volunteerWork.id)
       .agencyId(volunteerWork.agencyId)
       .startDate(volunteerWork.startDate)
@@ -108,18 +125,28 @@ export class VolunteerWorkResponse {
       .dayOfWeek(volunteerWork.dayOfWeek)
       .peopleCount(volunteerWork.peopleCount)
       .recruitPeopleCount(volunteerWork.recruitPeopleCount)
+      .currentPeopleCont(
+        volunteerWork.volunteerRequestList.filter(
+          (x) => !ignoreRequestStatus.has(x.status),
+        ).length,
+      )
       .notice(volunteerWork.notice)
       .interest(volunteerWork.interest)
       .targetType(volunteerWork.targetType)
       .workAddress(volunteerWork.workAddress)
       .workPlace(volunteerWork.workPlace)
+      .requestList(
+        await VolunteerRequestResponse.fromArray(
+          volunteerWork.volunteerRequestList,
+        ),
+      )
       .build();
   }
 
-  static fromArray(volunteerWorkList: VolunteerWork[]) {
-    const result: VolunteerWorkResponse[] = [];
+  static async fromArray(volunteerWorkList: VolunteerWork[]) {
+    const result: VolunteerWorkDetailResponse[] = [];
     for (const volunteerWork of volunteerWorkList) {
-      result.push(VolunteerWorkResponse.from(volunteerWork));
+      result.push(await VolunteerWorkDetailResponse.from(volunteerWork));
     }
     return result;
   }

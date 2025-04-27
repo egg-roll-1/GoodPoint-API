@@ -16,13 +16,13 @@ export class VolunteerWorkService {
   ) {}
 
   @Transactional()
-  async register(managerId: number, request: PostVolunteerWorkRequest) {
+  public async register(managerId: number, request: PostVolunteerWorkRequest) {
     await this.agencyRepository.findOneOrThrow(managerId, request.agencyId);
     return await this.volunteerWorkRepository.save(request.toEntity());
   }
 
   @Transactional()
-  async patch(
+  public async patch(
     managerId: number,
     volunteerWorkId: number,
     request: PatchVolunteerWorkRequest,
@@ -36,7 +36,7 @@ export class VolunteerWorkService {
   }
 
   @Transactional()
-  async remove(managerId: number, volunteerWorkId: number) {
+  public async remove(managerId: number, volunteerWorkId: number) {
     const volunteerWork = await this.findVolunteerWorkOrThrow(
       managerId,
       volunteerWorkId,
@@ -47,10 +47,38 @@ export class VolunteerWorkService {
     });
   }
 
-  async getList(managerId: number, query: GetVolunteerWorkRequest) {
+  public async getDetail(managerId: number, id: number) {
+    const volunteerWork = await this.volunteerWorkRepository
+      .findOneOrFail({
+        relations: {
+          volunteerRequestList: {
+            user: true,
+          },
+        },
+        where: {
+          id,
+          agency: {
+            managerList: {
+              id: managerId,
+              isRemoved: false,
+            },
+          },
+        },
+      })
+      .catch(() => {
+        throw new EGException(VolunteerWorkException.NOT_FOUND);
+      });
+
+    return volunteerWork;
+  }
+
+  public async getList(managerId: number, query: GetVolunteerWorkRequest) {
     const { agencyId } = query;
 
     const volunteerWorkList = await this.volunteerWorkRepository.find({
+      relations: {
+        volunteerRequestList: true,
+      },
       where: {
         agency: {
           id: agencyId,

@@ -1,4 +1,5 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
+import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Builder } from 'builder-pattern';
 import { VolunteerWork } from 'libs/core/src/domain/volunteer-work/entity/volunteer-work.entity';
@@ -34,6 +35,9 @@ export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사활동 모집인원' })
   recruitPeopleCount: number;
 
+  @ApiProperty({ description: '현재 신청한 봉사활동 인원' })
+  currentPeopleCont: number;
+
   @ApiProperty({ description: '봉사활동 주소지' })
   workAddress: string;
 
@@ -60,6 +64,12 @@ export class VolunteerWorkResponse {
 
   static async from(volunteerWork: VolunteerWork) {
     const agency = await volunteerWork.agency;
+
+    const ignoreRequestStatus = new Set([
+      VolunteerRequestStatus.Canceled,
+      VolunteerRequestStatus.Reject,
+    ]);
+
     return Builder(VolunteerWorkResponse)
       .id(volunteerWork.id)
       .startDate(volunteerWork.startDate)
@@ -71,6 +81,11 @@ export class VolunteerWorkResponse {
       .dayOfWeek(volunteerWork.dayOfWeek)
       .peopleCount(volunteerWork.peopleCount)
       .recruitPeopleCount(volunteerWork.recruitPeopleCount)
+      .currentPeopleCont(
+        volunteerWork.volunteerRequestList.filter(
+          (x) => !ignoreRequestStatus.has(x.status),
+        ).length,
+      )
       .workAddress(volunteerWork.workAddress)
       .workPlace(volunteerWork.workPlace)
       .latitude(volunteerWork.latitude)

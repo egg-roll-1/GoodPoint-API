@@ -85,7 +85,7 @@ export class VolunteerWork extends EGBaseEntity {
   /** 연관관계 */
   @ManyToOne(() => Agency)
   @JoinColumn({ name: 'agency_id' })
-  agency: Agency;
+  agency: Promise<Agency>;
 
   @Column({ name: 'agency_id', nullable: true })
   agencyId: number;

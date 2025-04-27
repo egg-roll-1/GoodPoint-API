@@ -18,6 +18,15 @@ export class VolunteerHistory extends EGBaseEntity {
   @Column({ name: 'status' })
   status: VolunteerHistoryStatus;
 
+  @Column({ name: 'start_date_time' })
+  startDateTime: Date;
+
+  @Column({ name: 'end_date_time' })
+  endDateTime: Date;
+
+  @Column({ name: 'hour' })
+  hour: number;
+
   /*연관관계*/
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })

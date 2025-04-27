@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AgencyDomainModule } from './agency/agency.module';
+import { CreditHistoryDomainModule } from './credit-history/credit-history.module';
 import { ManagerDomainModule } from './manager/manager.module';
 import { UserDomainModule } from './user/user.module';
 import { VolunteerHistoryDomainModule } from './volunteer-history/volunteer-history.module';
@@ -13,6 +14,7 @@ const MODULE_LIST = [
   VolunteerHistoryDomainModule,
   VolunteerRequestDomainModule,
   VolunteerWorkDomainModule,
+  CreditHistoryDomainModule,
 ];
 
 @Module({

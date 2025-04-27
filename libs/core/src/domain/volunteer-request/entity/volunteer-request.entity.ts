@@ -21,7 +21,7 @@ export class VolunteerRequest extends EGBaseEntity {
   /** 연관관계 */
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Promise<User>;
 
   @Column({ name: 'user_id', nullable: true })
   userId: number;

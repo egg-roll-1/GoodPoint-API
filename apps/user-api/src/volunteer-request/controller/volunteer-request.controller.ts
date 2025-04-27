@@ -1,8 +1,7 @@
 import { SignedUser } from '@core/application/auth/decorator/user.decorator';
 import { TokenUserDto } from '@core/application/auth/dto/token-user.dto';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { VolunteerApplyRequest } from '../dto/request/volunteer-request.request';
 import { VolunteerRequestResponse } from '../dto/response/volunteer-request.response';
 import { VolunteerRequestService } from '../service/volunteer-request.service';
 
@@ -14,14 +13,14 @@ export class VolunteerRequestController {
     private readonly volunteerRequestService: VolunteerRequestService,
   ) {}
 
-  @ApiOperation({ summary: '봉사활동을 신청합니다.' })
-  @Post('/:id/apply')
-  async requestVolunteerRequest(
+  @ApiOperation({ summary: '봉사활동 신청 취소' })
+  @Delete('/:id')
+  async cancelRequest(
     @SignedUser() tokenUser: TokenUserDto,
-    @Body() request: VolunteerApplyRequest,
+    @Param('id') id: number,
   ) {
     const { id: userId } = tokenUser;
-    await this.volunteerRequestService.applyVolunteer(userId, request);
+    await this.volunteerRequestService.cancel(userId, id);
   }
 
   @ApiOperation({ summary: '봉사활동 신청내역 조회' })

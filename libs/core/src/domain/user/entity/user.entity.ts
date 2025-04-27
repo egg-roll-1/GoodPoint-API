@@ -39,6 +39,9 @@ export class User extends EGBaseEntity {
   @Column({ name: 'interest', nullable: true })
   _interest: string;
 
+  @Column({ name: 'credit_balance', default: 0 })
+  creditBalance: number;
+
   /** Setter/Getter */
   set interest(interestList: Interest[]) {
     this._interest = interestList.join(',');

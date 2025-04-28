@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql8-container
+    environment:
+      MYSQL_ROOT_PASSWORD: laisflkasdnflkasdfjioasndf
+      MYSQL_DATABASE: eggroll
+      MYSQL_USER: app-user
+      MYSQL_PASSWORD: asldfjasdfi23rh9efjesifq03erjrdsfdsfksdf
+      TZ: "UTC"
+      MYSQL_INITDB_SKIP_TZINFO: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - be-network
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --init-connect='SET NAMES utf8mb4'
+      --default-time-zone='+00:00'
+
+volumes:
+  mysql_data:
+
+networks:
+  be-network:
+    external: true

@@ -37,7 +37,7 @@ package.json이 있는 경로에 `.env.local`이라는 파일을 생성해서 �
 NODE_ENV=local
 
 USER_API_PORT=3000
-ADMIN_API_PORT=3001
+MANAGER_API_PORT=3001
 
 DB_DATABASE=eggroll
 DB_HOST=127.0.0.1

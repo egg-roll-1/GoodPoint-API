@@ -3,7 +3,7 @@
 export const NODE_ENV = 'NODE_ENV';
 
 export const USER_API_PORT = 'USER_API_PORT';
-export const ADMIN_API_PORT = 'ADMIN_API_PORT';
+export const MANAGER_API_PORT = 'MANAGER_API_PORT';
 
 export const DB_DATABASE = 'DB_DATABASE';
 export const DB_HOST = 'DB_HOST';

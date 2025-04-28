@@ -9,7 +9,7 @@ import { GetVolunteerRequest } from '../dto/request/query.request';
 import { VolunteerWorkResponse } from '../dto/response/volunteer-work.response';
 import { VolunteerWorkService } from '../service/volunteer-work.service';
 
-@ApiTags('봉사활동 API')
+@ApiTags('VolunteerWork API')
 @Controller('/volunteer-work')
 export class VolunteerWorkController {
   constructor(private readonly volunteerWorkService: VolunteerWorkService) {}

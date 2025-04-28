@@ -2,11 +2,13 @@ import { User } from '@core/domain/user/entity/user.entity';
 import { VolunteerHistory } from '@core/domain/volunteer-history/entity/volunteer-history.entity';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Builder } from 'builder-pattern';
+import dayjs from 'dayjs';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,12 +27,11 @@ export class CreditHistory extends EGBaseEntity {
   @Column({ name: 'user_id', default: null })
   userId: number;
 
-  @ManyToOne(() => VolunteerHistory)
-  @JoinColumn({ name: 'volunteer_history_id' })
+  @OneToOne(() => VolunteerHistory, (history) => history.creditHistory)
   volunteerHistory: Promise<VolunteerHistory>;
 
-  @Column({ name: 'volunteer_history_id', nullable: true })
-  volunteerHistoryId: number;
+  @Column({ name: 'expired_at' })
+  expiredAt: Date;
 
   /** 생성 메서드 */
   static create(
@@ -40,7 +41,7 @@ export class CreditHistory extends EGBaseEntity {
       .id(object.id)
       .amount(object.amount)
       .userId(object.userId)
-      .volunteerHistoryId(object.volunteerHistoryId)
+      .expiredAt(object.expiredAt ?? dayjs().add(3, 'year').toDate())
       .build();
   }
 }

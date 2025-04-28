@@ -1,8 +1,6 @@
 import { VolunteerHistory } from '@core/domain/volunteer-history/entity/volunteer-history.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Builder } from 'builder-pattern';
-import { CreditHistoryResponse } from './credit.response';
-import { VolunteerWorkResponse } from './volunteer-work.response';
 
 export class VolunteerHistoryResponse {
   @ApiProperty({ description: '활동기록 ID' })
@@ -14,35 +12,24 @@ export class VolunteerHistoryResponse {
   @ApiProperty({ description: '종료시간' })
   endDateTime: Date;
 
-  @ApiProperty({ description: '인정시간(분)' })
+  @ApiProperty({ description: '인정시간 (분)' })
   minute: number;
 
-  @ApiProperty({ description: '크레딧' })
-  credit: CreditHistoryResponse;
-
-  @ApiProperty({ description: '봉사활동' })
-  volunteerWork: VolunteerWorkResponse;
-
-  static async from(history: VolunteerHistory) {
-    const volunteerWork = await history.volunteerWork;
-    const creditHistory = await history.creditHistory;
-
+  static from(history: VolunteerHistory) {
     const dto = Builder(VolunteerHistoryResponse)
       .id(history.id)
       .startDateTime(history.startDateTime)
       .endDateTime(history.endDateTime)
       .minute(history.minute)
-      .volunteerWork(await VolunteerWorkResponse.from(volunteerWork))
-      .credit(CreditHistoryResponse.from(creditHistory))
       .build();
 
     return dto;
   }
 
-  static async fromArray(historyList: VolunteerHistory[]) {
+  static fromArray(historyList: VolunteerHistory[]) {
     const result: VolunteerHistoryResponse[] = [];
     for (const history of historyList) {
-      result.push(await VolunteerHistoryResponse.from(history));
+      result.push(VolunteerHistoryResponse.from(history));
     }
     return result;
   }

@@ -6,18 +6,18 @@ import { VolunteerHistoryResponse } from '../dto/response/volunteer-history.resp
 import { VolunteerHistoryService } from '../service/volunteer-history.service';
 
 @ApiBearerAuth()
-@ApiTags('봉사활동 활동기록 API')
+@ApiTags('VolunteerHistory API')
 @Controller('/volunteer-history')
 export class VolunteerHistoryController {
   constructor(
     private readonly volunteerHistoryService: VolunteerHistoryService,
   ) {}
 
-  @ApiOperation({ summary: '출석내역 조회' })
+  @ApiOperation({ summary: '활동(출석) 내역 조회' })
   @Get()
-  async getHistory(@SignedUser() tokenUser: TokenUserDto) {
+  public async getHistory(@SignedUser() tokenUser: TokenUserDto) {
     const { id: userId } = tokenUser;
     const historyList = await this.volunteerHistoryService.findHistory(userId);
-    return VolunteerHistoryResponse.fromArray(historyList);
+    return await VolunteerHistoryResponse.fromArray(historyList);
   }
 }

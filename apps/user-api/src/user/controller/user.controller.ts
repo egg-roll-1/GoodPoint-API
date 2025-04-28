@@ -12,7 +12,7 @@ import { UserResponse } from '../dto/response/user.response';
 import { UserService } from '../service/user.service';
 
 @ApiBearerAuth()
-@ApiTags('사용자 API')
+@ApiTags('User API')
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

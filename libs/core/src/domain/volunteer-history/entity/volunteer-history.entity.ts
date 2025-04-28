@@ -1,22 +1,22 @@
+import { CreditHistory } from '@core/domain/credit-history/entity/credit-history.entity';
 import { User } from '@core/domain/user/entity/user.entity';
 import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
+import { Builder } from 'builder-pattern';
+import dayjs from 'dayjs';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { VolunteerHistoryStatus } from './volunteer-history.enum';
 
 @Entity({ name: 'volunteer_history' })
 export class VolunteerHistory extends EGBaseEntity {
   @PrimaryGeneratedColumn({ name: 'volunteer_history_id' })
   id: number;
-
-  @Column({ name: 'status' })
-  status: VolunteerHistoryStatus;
 
   @Column({ name: 'start_date_time' })
   startDateTime: Date;
@@ -24,8 +24,8 @@ export class VolunteerHistory extends EGBaseEntity {
   @Column({ name: 'end_date_time' })
   endDateTime: Date;
 
-  @Column({ name: 'hour' })
-  hour: number;
+  @Column({ name: 'minute' })
+  minute: number;
 
   /*연관관계*/
   @ManyToOne(() => User)
@@ -37,8 +37,33 @@ export class VolunteerHistory extends EGBaseEntity {
 
   @ManyToOne(() => VolunteerWork)
   @JoinColumn({ name: 'volunteer_work_id' })
-  volunteerWork: VolunteerWork;
+  volunteerWork: Promise<VolunteerWork>;
 
   @Column({ name: 'volunteer_work_id', nullable: true })
   volunteerWorkId: number;
+
+  @OneToOne(() => CreditHistory, (credit) => credit.volunteerHistory)
+  @JoinColumn({ name: 'credit_history_id' })
+  creditHistory: Promise<CreditHistory>;
+
+  @Column({ name: 'credit_history_id', nullable: true })
+  creditHistoryId: number;
+
+  static createOne(
+    object: Pick<
+      VolunteerHistory,
+      'startDateTime' | 'endDateTime' | 'userId' | 'volunteerWorkId'
+    > &
+      Partial<VolunteerHistory>,
+  ) {
+    return Builder(VolunteerHistory)
+      .id(object.id)
+      .startDateTime(object.startDateTime)
+      .endDateTime(object.endDateTime)
+      .minute(
+        object.minute ??
+          dayjs(object.endDateTime).diff(object.startDateTime, 'minute'),
+      )
+      .build();
+  }
 }

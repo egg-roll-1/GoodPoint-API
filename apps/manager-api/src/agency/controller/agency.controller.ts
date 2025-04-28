@@ -8,7 +8,7 @@ import { AgencyService } from '../service/agency.service';
 import { PatchAgencyRequest } from '../dto/request/patch.request';
 
 @ApiBearerAuth()
-@ApiTags('봉사기관 API')
+@ApiTags('Agency API')
 @Controller('/agency')
 export class AgencyController {
   constructor(private readonly agencyService: AgencyService) {}

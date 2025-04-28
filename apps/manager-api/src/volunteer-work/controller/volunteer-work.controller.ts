@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PatchVolunteerWorkRequest } from '../dto/request/patch.request';
 import { PostVolunteerWorkRequest } from '../dto/request/post.request';
 import { GetVolunteerWorkRequest } from '../dto/request/query.request';
@@ -18,7 +18,8 @@ import { VolunteerWorkDetailResponse } from '../dto/response/detail.response';
 import { VolunteerWorkResponse } from '../dto/response/list.response';
 import { VolunteerWorkService } from '../service/volunteer-work.service';
 
-@ApiTags('봉사활동')
+@ApiBearerAuth()
+@ApiTags('VolunteerWork API')
 @Controller('volunteer-work')
 export class VolunteerWorkController {
   constructor(private readonly volunteerWorkService: VolunteerWorkService) {}
@@ -50,11 +51,8 @@ export class VolunteerWorkController {
     @SignedUser() tokenUser: TokenUserDto,
     @Param('id') id: number,
   ) {
-    const { id: managerId } = tokenUser;
-    const volunteerWork = await this.volunteerWorkService.getDetail(
-      managerId,
-      id,
-    );
+    const { id: userId } = tokenUser;
+    const volunteerWork = await this.volunteerWorkService.getDetail(userId, id);
 
     return await VolunteerWorkDetailResponse.from(volunteerWork);
   }

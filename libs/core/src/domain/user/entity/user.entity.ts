@@ -1,3 +1,4 @@
+import { CreditHistory } from '@core/domain/credit-history/entity/credit-history.entity';
 import { Interest } from '@core/domain/enum/interest.enum';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Builder } from 'builder-pattern';
@@ -41,6 +42,9 @@ export class User extends EGBaseEntity {
 
   @Column({ name: 'credit_balance', default: 0 })
   creditBalance: number;
+
+  @OneToMany(() => CreditHistory, (creditHistory) => creditHistory.user)
+  creditHistory: CreditHistory[];
 
   /** Setter/Getter */
   set interest(interestList: Interest[]) {

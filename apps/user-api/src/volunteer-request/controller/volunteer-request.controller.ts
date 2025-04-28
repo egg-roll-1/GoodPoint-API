@@ -6,7 +6,7 @@ import { VolunteerRequestResponse } from '../dto/response/volunteer-request.resp
 import { VolunteerRequestService } from '../service/volunteer-request.service';
 
 @ApiBearerAuth()
-@ApiTags('봉사활동 신청 API')
+@ApiTags('VolunteerRequest API')
 @Controller('/volunteer-request')
 export class VolunteerRequestController {
   constructor(

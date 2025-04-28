@@ -21,8 +21,16 @@ async function bootstrap() {
 
 const initializeSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
-    .setTitle('Good Point Admin API')
-    .setDescription('봉사기관 담당자를 위한 API 문서입니다.')
+    .setTitle('Good Point Manager API')
+    .setDescription(
+      `봉사기관 담당자를 위한 API 문서입니다. 용어 정의는 다음과 같습니다.\n
+      - VolunteerWork: 봉사활동
+      - VolunteerRequest: 봉사활동 신청
+      - VolunteerHistory: 봉사활동 내역 (출석부)
+      - CreditHistory: 굿포인트 적립/사용 내역
+      - Agency: 봉사기관
+      `,
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();

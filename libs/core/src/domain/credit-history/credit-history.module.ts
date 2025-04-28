@@ -1,9 +1,9 @@
 import { RepositoryModule } from '@core/global/repository/repository.module';
 import { Module } from '@nestjs/common';
-import { CreditHistory } from './entity/credit-history.entity';
+import { CreditHistoryRepository } from './repository/credit-history.repository';
 
 @Module({
-  imports: [RepositoryModule.forFeatures([CreditHistory])],
+  imports: [RepositoryModule.forFeatures([CreditHistoryRepository])],
   exports: [RepositoryModule],
 })
 export class CreditHistoryDomainModule {}

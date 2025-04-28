@@ -12,6 +12,7 @@
     "user-api:dev": "npm run dev -- node dist/apps/user-api/src/main",
     "build:manager-api": "nest build manager-api",
     "manager-api:local": "dotenv -e .env.local -- nest start manager-api --watch",
+    "manager-api:dev": "npm run dev -- node dist/apps/manager-api/src/main",
     "format": "prettier --write \"**/src/**/*.ts\"",
     "local": "NODE_ENV=local dotenv -e .env.local",
     "dev": "NODE_ENV=development dotenv -e .env.development",

@@ -1,9 +1,9 @@
-name: User API CD Pipeline For Develop
+name: Manager API CD Pipeline For Develop
 
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ['User API CI Pipeline For Develop']
+    workflows: ['Manager API CI Pipeline For Develop']
     types:
       - completed
 
@@ -11,7 +11,7 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USER }}
   DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
-  SERVICE_NAME: user-api
+  SERVICE_NAME: manager-api
 
 jobs:
   deploy:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Read Port from .env.develop
         run: |
-          echo "PORT=$(grep -w 'USER_API_PORT' .env.develop | cut -d '=' -f2)" >> $GITHUB_ENV
+          echo "PORT=$(grep -w 'MANAGER_API_PORT' .env.develop | cut -d '=' -f2)" >> $GITHUB_ENV
 
       - name: Pull Docker image
         run: sudo docker pull $DOCKER_USERNAME/$DOCKER_REPOSITORY:$SERVICE_NAME-latest

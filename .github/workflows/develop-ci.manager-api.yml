@@ -1,0 +1,47 @@
+name: Manager API CI Pipeline For Develop
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ['main']
+    types: [closed]
+    paths-ignore:
+      - 'apps/user-api/**'
+      - 'test/**'
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USER }}
+  SERVICE_NAME: manager-api
+  DOCKER_FILE_PATH: ./apps/manager-api/Dockerfile.dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Dockerhub
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+      - name: Generate current time tag
+        id: current_time
+        run: echo "CURRENT_TIME=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ${{ env.DOCKER_FILE_PATH }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPOSITORY }}:${{ env.SERVICE_NAME }}-latest
+            ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPOSITORY }}:${{ env.SERVICE_NAME }}-${{ env.CURRENT_TIME }}
+          platforms: |
+            linux/amd64

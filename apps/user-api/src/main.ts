@@ -16,7 +16,7 @@ async function bootstrap() {
 
   app.useGlobalGuards(new JwtAuthGuard(app.get(Reflector)));
 
-  await app.listen(3000);
+  await app.listen(process.env.USER_API_PORT);
 }
 
 const initializeSwagger = (app: INestApplication) => {

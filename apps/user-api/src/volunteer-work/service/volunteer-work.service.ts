@@ -1,3 +1,5 @@
+import { VolunteerRequest } from '@core/domain/volunteer-request/entity/volunteer-request.entity';
+import { VolunteerRequestException } from '@core/domain/volunteer-request/exception/volunteer-request.exception';
 import { VolunteerRequestRepository } from '@core/domain/volunteer-request/repository/volunteer-request.repository';
 import { VolunteerWorkStatus } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { VolunteerWorkException } from '@core/domain/volunteer-work/exception/volunteer-work.exception';
@@ -8,6 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 import { GetVolunteerRequest } from '../dto/request/query.request';
+import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
 
 @Injectable()
 export class VolunteerWorkService {
@@ -83,31 +86,26 @@ export class VolunteerWorkService {
       throw new EGException(VolunteerWorkException.CANNOT_APPLY_STATUS);
     }
 
-    /** todo 봉사활동신청내역 생성 */
-
-    // 1. 이미 신청한 내역이 존재하는 경우 - 이미 신청했습니다 예외
-    const alreadyApplied = await this.volunteerRequestRepository.findOne({
+    const alreadyRequest = await this.volunteerRequestRepository.findOne({
       where: {
         userId,
         volunteerWork: { id: volunteerWorkId },
+        status: In([
+          VolunteerRequestStatus.Approve,
+          VolunteerRequestStatus.Wait,
+        ]),
       },
     });
 
-    if (alreadyApplied) {
-      throw new EGException({
-        code: 'VRE001',
-        message: '이미 신청한 봉사활동입니다.',
-        status: 400,
-      });
+    if (alreadyRequest) {
+      throw new EGException(VolunteerRequestException.ALREADY_EXIST);
     }
 
-    // 2. 봉사활동신청(VolunteerRequest) 엔티티 객체 생성
-    const volunteerRequest = this.volunteerRequestRepository.create({
-      userId,
-      volunteerWork,
-    });
-
-    // 3. 2에서 만든 엔티티 저장 save
-    await this.volunteerRequestRepository.save(volunteerRequest);
+    return await this.volunteerRequestRepository.save(
+      VolunteerRequest.createOne({
+        userId,
+        volunteerWorkId: volunteerWork.id,
+      }),
+    );
   }
 }

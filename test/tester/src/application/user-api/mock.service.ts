@@ -8,6 +8,8 @@ import { faker } from '@faker-js/faker/locale/ko';
 import { Injectable } from '@nestjs/common';
 import { SignUpRequest } from 'apps/user-api/src/auth/dto/request/signup.request';
 import { AuthService } from 'apps/user-api/src/auth/service/auth.service';
+import { VolunteerRequestService } from 'apps/user-api/src/volunteer-request/service/volunteer-request.service';
+import { VolunteerWorkService } from 'apps/user-api/src/volunteer-work/service/volunteer-work.service';
 import { Builder } from 'builder-pattern';
 
 @Injectable()
@@ -15,6 +17,8 @@ export class UserMockService {
   constructor(
     private readonly authService: AuthService,
     private readonly userRepository: UserRepository,
+    private readonly volunteerWorkService: VolunteerWorkService,
+    private readonly volunteerRequestService: VolunteerRequestService,
   ) {}
 
   public async signup() {
@@ -34,5 +38,9 @@ export class UserMockService {
     });
 
     return user;
+  }
+
+  public async requestVolunteer(userId: number, workId: number) {
+    return await this.volunteerWorkService.applyVolunteer(userId, workId);
   }
 }

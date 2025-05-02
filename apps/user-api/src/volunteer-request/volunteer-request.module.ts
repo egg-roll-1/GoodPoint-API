@@ -7,6 +7,6 @@ import { VolunteerRequestService } from './service/volunteer-request.service';
   imports: [CoreModule],
   controllers: [VolunteerRequestController],
   providers: [VolunteerRequestService],
-  exports: [],
+  exports: [VolunteerRequestService],
 })
 export class VolunteerRequestModule {}

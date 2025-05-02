@@ -1,4 +1,5 @@
 import { EGBaseEntity } from '@core/global/entity/base.entity';
+import { Builder } from 'builder-pattern';
 import { User } from 'libs/core/src/domain/user/entity/user.entity';
 import { VolunteerWork } from 'libs/core/src/domain/volunteer-work/entity/volunteer-work.entity';
 import {
@@ -32,4 +33,16 @@ export class VolunteerRequest extends EGBaseEntity {
 
   @Column({ name: 'volunteer_work_id', nullable: true })
   volunteerWorkId: number;
+
+  static createOne(
+    object: Pick<VolunteerRequest, 'userId' | 'volunteerWorkId'> &
+      Partial<VolunteerRequest>,
+  ) {
+    return Builder(VolunteerRequest)
+      .id(object.id)
+      .status(object.status)
+      .userId(object.userId)
+      .volunteerWorkId(object.volunteerWorkId)
+      .build();
+  }
 }

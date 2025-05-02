@@ -25,7 +25,9 @@ export class VolunteerWorkService {
     const [content, total] = await this.volunteerWorkRepository.findAndCount({
       relations: {
         volunteerRequestList: true,
-        agency: true,
+        agency: {
+          managerList: true,
+        },
         tagList: {
           tag: true,
         },
@@ -38,6 +40,25 @@ export class VolunteerWorkService {
     });
 
     return Page.createPageDto({ content, total, size, page });
+  }
+
+  async getDetail(id: number) {
+    const result = await this.volunteerWorkRepository.findOneOrFail({
+      relations: {
+        volunteerRequestList: true,
+        agency: {
+          managerList: true,
+        },
+        tagList: {
+          tag: true,
+        },
+      },
+      where: {
+        id,
+      },
+    });
+
+    return result;
   }
 
   /**

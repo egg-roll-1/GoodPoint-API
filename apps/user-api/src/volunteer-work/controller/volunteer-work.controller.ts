@@ -25,6 +25,14 @@ export class VolunteerWorkController {
     await this.volunteerWorkService.applyVolunteer(userId, id);
   }
 
+  @ApiOperation({ summary: '봉사활동을 조회합니다.' })
+  @Public()
+  @Get('/:id')
+  async getVolunteerWork(@Param('id') id: number) {
+    const result = await this.volunteerWorkService.getDetail(id);
+    return await VolunteerWorkResponse.from(result);
+  }
+
   @ApiOperation({ summary: '봉사활동 목록을 조회합니다.' })
   @ApiPaginatedResponse(VolunteerWorkResponse)
   @Public()

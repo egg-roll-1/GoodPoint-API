@@ -98,8 +98,6 @@ export class Page<T> {
     size: number;
     page: number;
   }) {
-    ++page;
-
     const numberOfElements = content.length;
     const totalPages = Math.ceil(total / size);
     const isFirst = page === 1;

@@ -1,5 +1,5 @@
 export enum DayOfWeek {
-  Sum = 'Sun',
+  Sun = 'Sun',
   Mon = 'Mon',
   Tue = 'Tue',
   Wed = 'Wed',

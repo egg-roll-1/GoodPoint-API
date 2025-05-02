@@ -50,6 +50,7 @@ export class Manager extends EGBaseEntity {
       .name(object.name)
       .phoneNumber(object.phoneNumber)
       .password(object.password)
+      .agencyId(object.agencyId)
       .build();
   }
 }

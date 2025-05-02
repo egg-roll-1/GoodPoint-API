@@ -2,7 +2,6 @@ import { VolunteerHistory } from '@core/domain/volunteer-history/entity/voluntee
 import { ApiProperty } from '@nestjs/swagger';
 import { Builder } from 'builder-pattern';
 import { CreditHistoryResponse } from './credit.response';
-import { VolunteerWorkResponse } from './volunteer-work.response';
 
 export class VolunteerHistoryResponse {
   @ApiProperty({ description: '활동기록 ID' })
@@ -20,11 +19,7 @@ export class VolunteerHistoryResponse {
   @ApiProperty({ description: '크레딧' })
   credit: CreditHistoryResponse;
 
-  @ApiProperty({ description: '봉사활동' })
-  volunteerWork: VolunteerWorkResponse;
-
   static async from(history: VolunteerHistory) {
-    const volunteerWork = await history.volunteerWork;
     const creditHistory = await history.creditHistory;
 
     const dto = Builder(VolunteerHistoryResponse)
@@ -32,7 +27,6 @@ export class VolunteerHistoryResponse {
       .startDateTime(history.startDateTime)
       .endDateTime(history.endDateTime)
       .minute(history.minute)
-      .volunteerWork(await VolunteerWorkResponse.from(volunteerWork))
       .credit(CreditHistoryResponse.from(creditHistory))
       .build();
 

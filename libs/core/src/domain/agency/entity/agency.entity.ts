@@ -12,20 +12,8 @@ export class Agency extends EGBaseEntity {
   @Column({ name: 'title' })
   title: string;
 
-  @Column({ name: 'type' })
-  type: string;
-
-  @Column({ name: 'phone_number' })
-  phoneNumber: string;
-
-  @Column({ name: 'manager_name' })
-  managerName: string;
-
-  @Column({ name: 'email' })
-  email: string;
-
-  @Column({ name: 'max_people_count' })
-  maxPeopleCount: number;
+  @Column({ name: 'nation_agency', nullable: true })
+  nationAgency: string;
 
   @OneToMany(() => VolunteerWork, (work) => work.agency)
   volunteerWork: VolunteerWork[];
@@ -38,26 +26,12 @@ export class Agency extends EGBaseEntity {
 
   /** 생성메서드 */
   static createOne(
-    object: Pick<
-      Agency,
-      | 'title'
-      | 'type'
-      | 'phoneNumber'
-      | 'managerName'
-      | 'email'
-      | 'maxPeopleCount'
-      | 'ownerManagerId'
-    > &
-      Partial<Agency>,
+    object: Pick<Agency, 'title' | 'nationAgency'> & Partial<Agency>,
   ) {
     return Builder(Agency)
       .id(object.id)
       .title(object.title)
-      .type(object.type)
-      .phoneNumber(object.phoneNumber)
-      .managerName(object.managerName)
-      .email(object.email)
-      .maxPeopleCount(object.maxPeopleCount)
+      .nationAgency(object.nationAgency)
       .ownerManagerId(object.ownerManagerId)
       .build();
   }

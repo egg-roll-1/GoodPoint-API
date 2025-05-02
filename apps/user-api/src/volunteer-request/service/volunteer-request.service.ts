@@ -19,7 +19,12 @@ export class VolunteerRequestService {
   public async getVolunteerRequestList(userId: number) {
     return await this.volunteerRequestRepository.find({
       relations: {
-        volunteerWork: true,
+        volunteerWork: {
+          tagList: {
+            tag: true,
+          },
+          volunteerRequestList: true,
+        },
       },
       where: {
         userId,

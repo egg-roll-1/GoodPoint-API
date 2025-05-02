@@ -52,7 +52,7 @@ export class PatchAgencyRequest {
     return Agency.createOne({
       id: existAgency.id,
       title: this.title ?? existAgency.title,
-      type: this.type ?? existAgency.type,
+      nationAgency: this.type ?? existAgency.nationAgency,
       phoneNumber: this.phoneNumber ?? existAgency.phoneNumber,
       managerName: this.managerName ?? existAgency.managerName,
       email: this.email ?? existAgency.email,

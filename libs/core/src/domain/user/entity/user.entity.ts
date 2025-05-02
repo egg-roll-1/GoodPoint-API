@@ -1,5 +1,4 @@
 import { CreditHistory } from '@core/domain/credit-history/entity/credit-history.entity';
-import { Interest } from '@core/domain/enum/interest.enum';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Builder } from 'builder-pattern';
 import { VolunteerHistory } from 'libs/core/src/domain/volunteer-history/entity/volunteer-history.entity';
@@ -37,27 +36,11 @@ export class User extends EGBaseEntity {
   @Column({ name: 'authority', default: Authority.ROLE_USER })
   authority: Authority = Authority.ROLE_USER;
 
-  @Column({ name: 'interest', nullable: true })
-  _interest: string;
-
   @Column({ name: 'credit_balance', default: 0 })
   creditBalance: number;
 
   @OneToMany(() => CreditHistory, (creditHistory) => creditHistory.user)
   creditHistory: CreditHistory[];
-
-  /** Setter/Getter */
-  set interest(interestList: Interest[]) {
-    this._interest = interestList.join(',');
-  }
-
-  get interest() {
-    if (!this._interest) {
-      return [];
-    }
-
-    return this._interest.split(',').map((x) => x as Interest);
-  }
 
   /** 봉사활동 신청 내역 */
   @OneToMany(() => VolunteerRequest, (request) => request.user)
@@ -72,10 +55,7 @@ export class User extends EGBaseEntity {
   }
 
   static create(
-    object: Pick<
-      User,
-      'name' | 'phoneNumber' | 'password' | 'age' | 'gender' | 'interest'
-    > &
+    object: Pick<User, 'name' | 'phoneNumber' | 'password' | 'age' | 'gender'> &
       Partial<User>,
   ) {
     return User.builder()
@@ -85,7 +65,6 @@ export class User extends EGBaseEntity {
       .password(object.password)
       .age(object.age)
       .gender(object.gender)
-      .interest(object.interest)
       .build();
   }
 }

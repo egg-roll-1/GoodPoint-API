@@ -32,7 +32,7 @@ export class AgencyResponse {
     const dto = Builder(AgencyResponse)
       .id(agency.id)
       .title(agency.title)
-      .type(agency.type)
+      .type(agency.nationAgency)
       .phoneNumber(agency.phoneNumber)
       .managerName(agency.managerName)
       .email(agency.email)

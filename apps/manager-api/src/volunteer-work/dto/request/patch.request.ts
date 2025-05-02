@@ -1,7 +1,5 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
-import { Interest } from '@core/domain/enum/interest.enum';
 import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
-import { TargetType } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDate,
@@ -18,6 +16,12 @@ import {
 export class PatchVolunteerWorkRequest {
   @IsOptional()
   agencyId: number;
+
+  @ApiPropertyOptional({ description: '봉사활동 제목' })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  title: string;
 
   @ApiPropertyOptional({ description: '봉사활동 시작일' })
   @IsOptional()
@@ -81,24 +85,6 @@ export class PatchVolunteerWorkRequest {
   @IsOptional()
   notice?: string;
 
-  @ApiPropertyOptional({
-    description: '봉사분야',
-    type: 'enum',
-    enum: Interest,
-  })
-  @IsEnum(Interest)
-  @IsOptional()
-  interest?: Interest;
-
-  @ApiPropertyOptional({
-    description: '봉사대상',
-    type: 'enum',
-    enum: TargetType,
-  })
-  @IsEnum(TargetType)
-  @IsOptional()
-  targetType?: TargetType;
-
   @ApiPropertyOptional({ description: '봉사활동 주소 - 서울특별시 동작구 ...' })
   @IsNotEmpty()
   @IsString()
@@ -114,6 +100,7 @@ export class PatchVolunteerWorkRequest {
   toEntity(exist: VolunteerWork) {
     return VolunteerWork.createOne({
       id: exist.id,
+      title: this.title ?? exist.title,
       startDate: this.startDate ?? exist.startDate,
       endDate: this.endDate ?? exist.endDate,
       startMinute: this.startMinute ?? exist.startMinute,
@@ -121,11 +108,8 @@ export class PatchVolunteerWorkRequest {
       recruitStartDate: this.recruitStartDate ?? exist.recruitStartDate,
       recruitEndDate: this.recruitEndDate ?? exist.recruitEndDate,
       dayOfWeek: this.dayOfWeek ?? exist.dayOfWeek,
-      peopleCount: this.peopleCount ?? exist.peopleCount,
       recruitPeopleCount: this.recruitPeopleCount ?? exist.recruitPeopleCount,
       notice: this.notice ?? exist.notice,
-      interest: this.interest ?? exist.interest,
-      targetType: this.targetType ?? exist.targetType,
       workAddress: this.workAddress ?? exist.workAddress,
       workPlace: this.workPlace ?? exist.workPlace,
       longitude: exist.longitude,

@@ -51,6 +51,16 @@
           }
         ]
       }
+    },
+    "tester": {
+      "type": "application",
+      "root": "test/tester",
+      "entryFile": "main",
+      "sourceRoot": "test/tester/src",
+      "compilerOptions": {
+        "tsConfigPath": "test/tester/tsconfig.app.json",
+        "plugins": []
+      }
     }
   }
 }

@@ -1,7 +1,5 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
-import { Interest } from '@core/domain/enum/interest.enum';
 import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
-import { TargetType } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDate,
@@ -19,6 +17,11 @@ export class PostVolunteerWorkRequest {
   @ApiProperty({ description: '봉사활동 기관 ID' })
   @IsInt()
   agencyId: number;
+
+  @ApiProperty({ description: '봉사활동 제목' })
+  @IsString()
+  @IsNotEmpty()
+  title: string;
 
   @ApiProperty({ description: '봉사활동 시작일' })
   @IsDate()
@@ -72,14 +75,6 @@ export class PostVolunteerWorkRequest {
   @IsString()
   @IsOptional()
   notice: string;
-
-  @ApiProperty({ description: '봉사분야', type: 'enum', enum: Interest })
-  @IsEnum(Interest)
-  interest: Interest;
-
-  @ApiProperty({ description: '봉사대상', type: 'enum', enum: TargetType })
-  @IsEnum(TargetType)
-  targetType: TargetType;
 
   @ApiProperty({ description: '봉사활동 주소 - 서울특별시 동작구 ...' })
   @IsNotEmpty()

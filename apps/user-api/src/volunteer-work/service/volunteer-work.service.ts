@@ -1,13 +1,13 @@
+import { VolunteerRequestRepository } from '@core/domain/volunteer-request/repository/volunteer-request.repository';
+import { VolunteerWorkStatus } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
+import { VolunteerWorkException } from '@core/domain/volunteer-work/exception/volunteer-work.exception';
 import { VolunteerWorkRepository } from '@core/domain/volunteer-work/repository/volunteer-work.repository';
 import { Page } from '@core/global/dto/response/paging.response';
+import { EGException } from '@core/global/exception/exception';
 import { Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
-import { GetVolunteerRequest } from '../dto/request/query.request';
 import { Transactional } from 'typeorm-transactional';
-import { EGException } from '@core/global/exception/exception';
-import { VolunteerWorkException } from '@core/domain/volunteer-work/exception/volunteer-work.exception';
-import { VolunteerWorkStatus } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
-import { VolunteerRequestRepository } from '@core/domain/volunteer-request/repository/volunteer-request.repository';
+import { GetVolunteerRequest } from '../dto/request/query.request';
 
 @Injectable()
 export class VolunteerWorkService {
@@ -26,6 +26,9 @@ export class VolunteerWorkService {
       relations: {
         volunteerRequestList: true,
         agency: true,
+        tagList: {
+          tag: true,
+        },
       },
       where: {
         status: status ? In(status) : undefined,

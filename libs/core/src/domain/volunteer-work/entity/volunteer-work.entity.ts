@@ -1,5 +1,4 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
-import { Interest } from '@core/domain/enum/interest.enum';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Builder } from 'builder-pattern';
 import { Agency } from 'libs/core/src/domain/agency/entity/agency.entity';
@@ -13,12 +12,16 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { TargetType, VolunteerWorkStatus } from './volunteer-work.enum';
+import { VolunteerTag } from './volunteer-tag.entity';
+import { VolunteerWorkStatus } from './volunteer-work.enum';
 
 @Entity({ name: 'volunteer_work' })
 export class VolunteerWork extends EGBaseEntity {
   @PrimaryGeneratedColumn({ name: 'volunteer_work_id' })
   id: number;
+
+  @Column({ name: 'title' })
+  title: string;
 
   @Column({ name: 'start_date' })
   startDate: Date;
@@ -41,20 +44,11 @@ export class VolunteerWork extends EGBaseEntity {
   @Column({ name: 'day_of_week_list', nullable: true })
   _dayOfWeek: string;
 
-  @Column({ name: 'people_count' })
-  peopleCount: number;
-
-  @Column({ name: 'recruit_people_count' })
+  @Column({ name: 'recruit_people_count', default: 1 })
   recruitPeopleCount: number;
 
   @Column({ name: 'notice', length: 1000 })
   notice: string;
-
-  @Column({ name: 'interest' })
-  interest: Interest;
-
-  @Column({ name: 'target_type' })
-  targetType: TargetType;
 
   @Column({ name: 'work_address' })
   workAddress: string;
@@ -65,11 +59,17 @@ export class VolunteerWork extends EGBaseEntity {
   @Column({ name: 'status', default: VolunteerWorkStatus.Recruiting })
   status: VolunteerWorkStatus;
 
-  @Column({ name: 'latitude' })
+  @Column({ name: 'latitude', nullable: true, default: null })
   latitude: string;
 
-  @Column({ name: 'longitude' })
+  @Column({ name: 'longitude', nullable: true, default: null })
   longitude: string;
+
+  @Column({ name: 'max_hour', nullable: true, default: 2 })
+  maxHour: number;
+
+  @OneToMany(() => VolunteerTag, (tag) => tag.volunteerWork)
+  tagList: VolunteerTag[];
 
   /** Getter/Setter */
   set dayOfWeek(dayOfWeekList: DayOfWeek[]) {
@@ -107,19 +107,18 @@ export class VolunteerWork extends EGBaseEntity {
       | 'recruitStartDate'
       | 'recruitEndDate'
       | 'dayOfWeek'
-      | 'peopleCount'
       | 'recruitPeopleCount'
       | 'notice'
-      | 'interest'
-      | 'targetType'
       | 'workAddress'
       | 'workPlace'
       | 'agencyId'
+      | 'title'
     > &
       Partial<VolunteerWork>,
   ) {
     return Builder(VolunteerWork)
       .id(object.id)
+      .title(object.title)
       .startDate(object.startDate)
       .endDate(object.endDate)
       .startMinute(object.startMinute)
@@ -127,11 +126,8 @@ export class VolunteerWork extends EGBaseEntity {
       .recruitStartDate(object.recruitStartDate)
       .recruitEndDate(object.recruitEndDate)
       .dayOfWeek(object.dayOfWeek)
-      .peopleCount(object.peopleCount)
       .recruitPeopleCount(object.recruitPeopleCount)
       .notice(object.notice)
-      .interest(object.interest)
-      .targetType(object.targetType)
       .workAddress(object.workAddress)
       .workPlace(object.workPlace)
       .longitude(object.longitude)

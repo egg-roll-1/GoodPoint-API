@@ -3,6 +3,7 @@ import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/vo
 import { ApiProperty } from '@nestjs/swagger';
 import { Builder } from 'builder-pattern';
 import { VolunteerWork } from 'libs/core/src/domain/volunteer-work/entity/volunteer-work.entity';
+import { TagResponse } from './tag.response';
 
 export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사활동 ID' })
@@ -35,9 +36,6 @@ export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사활동 모집인원' })
   recruitPeopleCount: number;
 
-  @ApiProperty({ description: '현재 신청한 봉사활동 인원' })
-  currentPeopleCont: number;
-
   @ApiProperty({ description: '봉사활동 주소지' })
   workAddress: string;
 
@@ -59,11 +57,15 @@ export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사기관 - 연락처' })
   agencyPhoneNumber: string;
 
-  @ApiProperty({ description: '봉사기관 - 이메일' })
-  agencyEmail: string;
+  @ApiProperty({ description: '태그', type: TagResponse, isArray: true })
+  tagList: TagResponse[];
 
   static async from(volunteerWork: VolunteerWork) {
     const agency = await volunteerWork.agency;
+    const manager = agency.managerList[0];
+    const tagList = await Promise.all(
+      volunteerWork.tagList.map(async (x) => await x.tag),
+    );
 
     const ignoreRequestStatus = new Set([
       VolunteerRequestStatus.Canceled,
@@ -79,21 +81,20 @@ export class VolunteerWorkResponse {
       .recruitStartDate(volunteerWork.recruitStartDate)
       .recruitEndDate(volunteerWork.recruitEndDate)
       .dayOfWeek(volunteerWork.dayOfWeek)
-      .peopleCount(volunteerWork.peopleCount)
-      .recruitPeopleCount(volunteerWork.recruitPeopleCount)
-      .currentPeopleCont(
+      .peopleCount(
         volunteerWork.volunteerRequestList.filter(
           (x) => !ignoreRequestStatus.has(x.status),
         ).length,
       )
+      .recruitPeopleCount(volunteerWork.recruitPeopleCount)
       .workAddress(volunteerWork.workAddress)
       .workPlace(volunteerWork.workPlace)
       .latitude(volunteerWork.latitude)
       .longitude(volunteerWork.longitude)
       .agencyId(agency.id)
       .agencyTitle(agency.title)
-      .agencyPhoneNumber(agency.phoneNumber)
-      .agencyEmail(agency.email)
+      .agencyPhoneNumber(manager.phoneNumber)
+      .tagList(TagResponse.fromArray(tagList))
       .build();
   }
 

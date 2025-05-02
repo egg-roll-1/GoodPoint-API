@@ -1,8 +1,6 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
-import { Interest } from '@core/domain/enum/interest.enum';
 import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
 import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
-import { TargetType } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Builder } from 'builder-pattern';
 import {
@@ -72,22 +70,11 @@ export class VolunteerWorkResponse {
   @Min(0)
   recruitPeopleCount: number;
 
-  @ApiProperty({ description: '현재 신청한 봉사활동 인원' })
-  currentPeopleCont: number;
-
   @ApiProperty({ description: '봉사 안내' })
   @MaxLength(1000)
   @IsString()
   @IsOptional()
   notice: string;
-
-  @ApiProperty({ description: '봉사분야', type: 'enum', enum: Interest })
-  @IsEnum(Interest)
-  interest: Interest;
-
-  @ApiProperty({ description: '봉사대상', type: 'enum', enum: TargetType })
-  @IsEnum(TargetType)
-  targetType: TargetType;
 
   @ApiProperty({ description: '봉사활동 주소 - 서울특별시 동작구 ...' })
   @IsNotEmpty()
@@ -115,16 +102,13 @@ export class VolunteerWorkResponse {
       .recruitStartDate(volunteerWork.recruitStartDate)
       .recruitEndDate(volunteerWork.recruitEndDate)
       .dayOfWeek(volunteerWork.dayOfWeek)
-      .peopleCount(volunteerWork.peopleCount)
-      .recruitPeopleCount(volunteerWork.recruitPeopleCount)
-      .currentPeopleCont(
+      .peopleCount(
         volunteerWork.volunteerRequestList.filter(
           (x) => !ignoreRequestStatus.has(x.status),
         ).length,
       )
+      .recruitPeopleCount(volunteerWork.recruitPeopleCount)
       .notice(volunteerWork.notice)
-      .interest(volunteerWork.interest)
-      .targetType(volunteerWork.targetType)
       .workAddress(volunteerWork.workAddress)
       .workPlace(volunteerWork.workPlace)
       .build();

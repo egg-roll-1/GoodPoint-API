@@ -1,4 +1,3 @@
-import { Interest } from '@core/domain/enum/interest.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 import { User } from 'libs/core/src/domain/user/entity/user.entity';
@@ -29,15 +28,6 @@ export class SignUpRequest {
   @IsEnum(Gender)
   gender: Gender;
 
-  @ApiProperty({
-    description: '성별',
-    type: 'enum',
-    enum: Interest,
-    isArray: true,
-  })
-  @IsEnum(Interest, { each: true })
-  interest: Interest[];
-
   /** 엔티티 변환 메서드 */
   toEntity() {
     return User.create({
@@ -46,7 +36,6 @@ export class SignUpRequest {
       password: this.password,
       age: this.age,
       gender: this.gender,
-      interest: this.interest,
     });
   }
 }

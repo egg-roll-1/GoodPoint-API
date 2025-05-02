@@ -63,7 +63,7 @@ export class v1365Test implements OnModuleInit {
     // await this.데이터합치기();
 
     // await this.봉사기관DB채우기();
-    await this.봉사활동DB채우기();
+    // await this.봉사활동DB채우기();
   }
 
   @MyTest()

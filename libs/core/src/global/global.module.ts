@@ -4,9 +4,10 @@ import { EGExceptionFilter } from './filter/custom-exception.filter';
 import { GlobalExceptionFilter } from './filter/global-exception.filter';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { ResponseInterceptor } from './interceptor/response.interceptor';
+import { AopModule } from '@toss/nestjs-aop';
 
 @Module({
-  imports: [],
+  imports: [AopModule],
   providers: [
     {
       provide: APP_FILTER,

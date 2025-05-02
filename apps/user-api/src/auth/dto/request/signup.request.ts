@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { User } from 'libs/core/src/domain/user/entity/user.entity';
 import { Gender } from 'libs/core/src/domain/user/entity/user.enum';
 
@@ -12,6 +20,8 @@ export class SignUpRequest {
   @ApiProperty({ description: '비밀번호' })
   @IsString()
   @IsNotEmpty()
+  @MinLength(4)
+  @MaxLength(20)
   password: string;
 
   @ApiProperty({ description: '이름' })
@@ -29,11 +39,11 @@ export class SignUpRequest {
   gender: Gender;
 
   /** 엔티티 변환 메서드 */
-  toEntity() {
+  toEntity(encryptedPassword: string) {
     return User.create({
       name: this.name,
       phoneNumber: this.phoneNumber,
-      password: this.password,
+      password: encryptedPassword,
       age: this.age,
       gender: this.gender,
     });

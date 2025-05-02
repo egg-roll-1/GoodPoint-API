@@ -24,7 +24,7 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
         database: configService.get<string>(DB_DATABASE),
         synchronize: true,
         autoLoadEntities: true,
-        logging: true,
+        logging: false,
         entities: ['dist/**/*.entity.js'],
         timezone: 'Z',
       }),

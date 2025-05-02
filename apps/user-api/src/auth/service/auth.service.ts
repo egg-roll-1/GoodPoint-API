@@ -11,18 +11,31 @@ import { Transactional } from 'typeorm-transactional';
 import { LoginRequest } from '../dto/request/login.request';
 import { SignUpRequest } from '../dto/request/signup.request';
 import { LoginResponse } from '../dto/response/login.response';
+import { ConfigService } from '@nestjs/config';
+import { SALT_ROUND } from '@core/global/config/const.config';
 
 @Injectable()
 export class AuthService {
+  private readonly SALT_ROUND: number;
+
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtUtils: JwtUtils,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.SALT_ROUND = Number(this.configService.get(SALT_ROUND));
+  }
 
   /** 회원가입 */
   @Transactional()
   async signup(request: SignUpRequest) {
-    const toSaveUser = request.toEntity();
+    const encryptedPassword = await bcrypt.hash(
+      request.password,
+      this.SALT_ROUND,
+    );
+
+    const toSaveUser = request.toEntity(encryptedPassword);
+
     const existUser = await this.findByPhoneNumber(toSaveUser.phoneNumber);
     if (existUser) {
       throw new EGException(UserException.ALREADY_EXIST);

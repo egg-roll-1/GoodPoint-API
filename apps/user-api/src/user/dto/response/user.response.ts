@@ -16,12 +16,18 @@ export class UserResponse {
   @ApiProperty({ description: '성별', type: 'enum', enum: Gender })
   gender: Gender;
 
-  static from(entity: User) {
+  @ApiProperty({ description: '크레딧 잔액' })
+  creditBalance: number;
+
+  static from(user: User) {
+    const balance = user.creditHistory.reduce((acc, x) => acc + x.amount, 0);
+
     return Builder(UserResponse)
-      .id(entity.id)
-      .name(entity.name)
-      .phoneNumber(entity.phoneNumber)
-      .gender(entity.gender)
+      .id(user.id)
+      .name(user.name)
+      .phoneNumber(user.phoneNumber)
+      .gender(user.gender)
+      .creditBalance(balance)
       .build();
   }
 }

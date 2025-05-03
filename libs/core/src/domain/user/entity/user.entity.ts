@@ -36,9 +36,6 @@ export class User extends EGBaseEntity {
   @Column({ name: 'authority', default: Authority.ROLE_USER })
   authority: Authority = Authority.ROLE_USER;
 
-  @Column({ name: 'credit_balance', default: 0 })
-  creditBalance: number;
-
   @OneToMany(() => CreditHistory, (creditHistory) => creditHistory.user)
   creditHistory: CreditHistory[];
 

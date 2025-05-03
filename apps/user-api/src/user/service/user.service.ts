@@ -10,6 +10,9 @@ export class UserService {
   async getUserProfile(userId: number) {
     return await this.userRepository
       .findOneOrFail({
+        relations: {
+          creditHistory: true,
+        },
         where: {
           id: userId,
         },

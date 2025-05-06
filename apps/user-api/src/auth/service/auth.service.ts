@@ -64,11 +64,10 @@ export class AuthService {
 
   /** 토큰을 발급하여 로그인처리합니다. */
   private async doLogin(user: User) {
-    const accessToken = await this.jwtUtils.createAccessToken(
-      TokenUserDto.createOne(user),
-    );
+    const { token: accessToken, expiredAt } =
+      await this.jwtUtils.createAccessToken(TokenUserDto.createOne(user));
 
-    return LoginResponse.create({ accessToken });
+    return LoginResponse.create({ accessToken, expiredAt });
   }
 
   private async findByPhoneNumber(phoneNumber: string) {

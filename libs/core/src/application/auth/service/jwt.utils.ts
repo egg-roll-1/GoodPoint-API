@@ -5,9 +5,11 @@ import { Request } from 'express';
 
 import { ACCESS_TOKEN_KEY } from '@core/global/config/const.config';
 import { EGException } from '@core/global/exception/exception';
+import dayjs from 'dayjs';
 import {
   ACCESS_TOKEN_PREFIX,
   ACCESS_TOKEN_SUBJECT,
+  ACCESS_TOKEN_TTL_SEC,
   ACCESS_TOKEN_TYPE,
 } from '../const/auth.const';
 import { TokenUserDto } from '../dto/token-user.dto';
@@ -31,9 +33,10 @@ export class JwtUtils {
       type: ACCESS_TOKEN_TYPE,
     };
 
+    const expiredAt = dayjs().add(ACCESS_TOKEN_TTL_SEC, 'second').toDate();
     const token: string = await this.jwtService.signAsync(payload);
 
-    return `${token}`;
+    return { expiredAt, token };
   }
 
   public async extractAccessTokenFromHeader(req: Request) {

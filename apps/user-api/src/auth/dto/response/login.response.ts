@@ -5,7 +5,13 @@ export class LoginResponse {
   @ApiProperty({ description: 'accessToken' })
   accessToken: string;
 
-  static create(object: Pick<LoginResponse, 'accessToken'>) {
-    return Builder(LoginResponse).accessToken(object.accessToken).build();
+  @ApiProperty({ description: '만료일' })
+  expiredAt: Date;
+
+  static create(object: Pick<LoginResponse, 'accessToken' | 'expiredAt'>) {
+    return Builder(LoginResponse)
+      .accessToken(object.accessToken)
+      .expiredAt(object.expiredAt)
+      .build();
   }
 }

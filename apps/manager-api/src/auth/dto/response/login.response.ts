@@ -5,7 +5,10 @@ export class LoginResponse {
   @ApiProperty({ description: 'accessToken' })
   accessToken: string;
 
-  static create(object: Pick<LoginResponse, 'accessToken'>) {
+  @ApiProperty({ description: 'expiredAt' })
+  expiredAt: Date;
+
+  static create(object: Pick<LoginResponse, 'accessToken' | 'expiredAt'>) {
     return Builder(LoginResponse).accessToken(object.accessToken).build();
   }
 }

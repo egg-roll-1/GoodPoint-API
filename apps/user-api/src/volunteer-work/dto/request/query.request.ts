@@ -1,26 +1,31 @@
-import { VolunteerWorkStatus } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { PagingRequest } from '@core/global/dto/request/paging.request';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+
+export class GetVolunteerRequestByGeometry {
+  @ApiPropertyOptional({ description: '위도 - 기본값: 숭실대 위치' })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  latitude?: number = 37.4963538;
+
+  @ApiPropertyOptional({ description: '경도 - 기본값: 숭실대 위치' })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  longitude?: number = 126.9572222;
+
+  @ApiPropertyOptional({ description: '범위 - 기본값: 5' })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  distanceKm: number = 5;
+}
 
 export class GetVolunteerRequest extends PagingRequest {
-  @ApiPropertyOptional({ description: '상태' })
+  @ApiPropertyOptional({ description: '검색어' })
   @IsOptional()
-  @IsArray()
-  @IsEnum(VolunteerWorkStatus, { each: true })
-  @Transform(({ value }) => value.split(','))
-  status?: VolunteerWorkStatus[];
-
-  @ApiPropertyOptional({ description: '위도' })
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  latitude?: number;
-
-  @ApiPropertyOptional({ description: '경도' })
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  longitude?: number;
+  @IsString()
+  keyword?: string;
 }

@@ -5,7 +5,11 @@ import { Public } from '@core/application/auth/decorator/public.decorator';
 import { SignedUser } from '@core/application/auth/decorator/user.decorator';
 import { TokenUserDto } from '@core/application/auth/dto/token-user.dto';
 import { ApiPaginatedResponse } from '@core/global/decorator/swagger-paging-response.decorator';
-import { GetVolunteerRequest } from '../dto/request/query.request';
+import {
+  GetVolunteerRequest,
+  GetVolunteerRequestByGeometry,
+} from '../dto/request/query.request';
+import { VolunteerWorkDetailResponse } from '../dto/response/detail.response';
 import { VolunteerWorkResponse } from '../dto/response/volunteer-work.response';
 import { VolunteerWorkService } from '../service/volunteer-work.service';
 
@@ -30,7 +34,18 @@ export class VolunteerWorkController {
   @Get('/:id')
   async getVolunteerWork(@Param('id') id: number) {
     const result = await this.volunteerWorkService.getDetail(id);
-    return await VolunteerWorkResponse.from(result);
+    return await VolunteerWorkDetailResponse.from(result);
+  }
+
+  @ApiOperation({ summary: '위치기반으로 봉사활동 목록을 조회합니다.' })
+  @Public()
+  @Get('/geometry')
+  async getVolunteerWorkListByGeometry(
+    @Query() request: GetVolunteerRequestByGeometry,
+  ) {
+    const result =
+      await this.volunteerWorkService.searchListByGeometry(request);
+    return VolunteerWorkResponse.fromArray(result);
   }
 
   @ApiOperation({ summary: '봉사활동 목록을 조회합니다.' })

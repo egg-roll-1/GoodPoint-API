@@ -8,16 +8,23 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Max,
-  MaxLength,
   Min,
 } from 'class-validator';
 
 export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사활동 ID' })
   id: number;
+
+  @ApiProperty({ description: '제목' })
+  title: string;
+
+  @ApiProperty({ description: '공지사항' })
+  notice: string;
+
+  @ApiProperty({ description: '최대 인정 시간' })
+  maxHour: number;
 
   @ApiProperty({ description: '봉사활동 기관 ID' })
   @IsInt()
@@ -70,12 +77,6 @@ export class VolunteerWorkResponse {
   @Min(0)
   recruitPeopleCount: number;
 
-  @ApiProperty({ description: '봉사 안내' })
-  @MaxLength(1000)
-  @IsString()
-  @IsOptional()
-  notice: string;
-
   @ApiProperty({ description: '봉사활동 주소 - 서울특별시 동작구 ...' })
   @IsNotEmpty()
   @IsString()
@@ -94,6 +95,9 @@ export class VolunteerWorkResponse {
 
     return Builder(VolunteerWorkResponse)
       .id(volunteerWork.id)
+      .title(volunteerWork.title)
+      .notice(volunteerWork.notice)
+      .maxHour(volunteerWork.maxHour)
       .agencyId(volunteerWork.agencyId)
       .startDate(volunteerWork.startDate)
       .endDate(volunteerWork.endDate)

@@ -5,7 +5,7 @@ import { Builder } from 'builder-pattern';
 import { VolunteerWork } from 'libs/core/src/domain/volunteer-work/entity/volunteer-work.entity';
 import { TagResponse } from './tag.response';
 
-export class VolunteerWorkResponse {
+export class VolunteerWorkDetailResponse {
   @ApiProperty({ description: '봉사활동 ID' })
   id: number;
 
@@ -81,9 +81,10 @@ export class VolunteerWorkResponse {
       VolunteerRequestStatus.Reject,
     ]);
 
-    return Builder(VolunteerWorkResponse)
+    return Builder(VolunteerWorkDetailResponse)
       .id(volunteerWork.id)
       .title(volunteerWork.title)
+      .notice(volunteerWork.notice)
       .maxHour(volunteerWork.maxHour)
       .startDate(volunteerWork.startDate)
       .endDate(volunteerWork.endDate)
@@ -110,9 +111,9 @@ export class VolunteerWorkResponse {
   }
 
   static async fromArray(entityList: VolunteerWork[]) {
-    const result: VolunteerWorkResponse[] = [];
+    const result: VolunteerWorkDetailResponse[] = [];
     for (const entity of entityList) {
-      result.push(await VolunteerWorkResponse.from(entity));
+      result.push(await VolunteerWorkDetailResponse.from(entity));
     }
     return result;
   }

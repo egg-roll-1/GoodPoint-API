@@ -1,6 +1,9 @@
 import { delay } from '@core/global/utils/time.utils';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { GetVolunteerRequest } from 'apps/user-api/src/volunteer-work/dto/request/query.request';
+import {
+  GetVolunteerRequest,
+  GetVolunteerRequestByGeometry,
+} from 'apps/user-api/src/volunteer-work/dto/request/query.request';
 import { VolunteerWorkResponse } from 'apps/user-api/src/volunteer-work/dto/response/volunteer-work.response';
 import { VolunteerWorkService } from 'apps/user-api/src/volunteer-work/service/volunteer-work.service';
 import assert from 'assert';
@@ -24,15 +27,17 @@ export class VolunteerWorkTest implements OnModuleInit {
   @MyTest()
   private async 봉사활동조회테스트() {
     // when
-    const volunteerWorkList = await this.volunteerWorkService.searchList(
-      Builder(GetVolunteerRequest).build(),
-    );
+    const volunteerWorkList =
+      await this.volunteerWorkService.searchListByGeometry(
+        Builder(GetVolunteerRequestByGeometry).build(),
+      );
 
-    const response = await VolunteerWorkResponse.fromArray(
-      volunteerWorkList.content,
-    );
+    const response = await VolunteerWorkResponse.fromArray(volunteerWorkList);
 
     assert.equal(response.length > 1, true, 'data exist');
+
+    console.log('response: ', response);
+    console.log('length: ', response.length);
 
     const target = await this.volunteerWorkService.getDetail(response[0].id);
     await VolunteerWorkResponse.from(target);

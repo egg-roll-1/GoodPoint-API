@@ -18,6 +18,17 @@ import { VolunteerWorkService } from '../service/volunteer-work.service';
 export class VolunteerWorkController {
   constructor(private readonly volunteerWorkService: VolunteerWorkService) {}
 
+  @ApiOperation({ summary: '위치기반으로 봉사활동 목록을 조회합니다.' })
+  @Public()
+  @Get('/geometry')
+  async getVolunteerWorkListByGeometry(
+    @Query() request: GetVolunteerRequestByGeometry,
+  ) {
+    const result =
+      await this.volunteerWorkService.searchListByGeometry(request);
+    return VolunteerWorkResponse.fromArray(result);
+  }
+
   @ApiBearerAuth()
   @ApiOperation({ summary: '봉사활동을 신청합니다.' })
   @Post('/:id')
@@ -35,17 +46,6 @@ export class VolunteerWorkController {
   async getVolunteerWork(@Param('id') id: number) {
     const result = await this.volunteerWorkService.getDetail(id);
     return await VolunteerWorkDetailResponse.from(result);
-  }
-
-  @ApiOperation({ summary: '위치기반으로 봉사활동 목록을 조회합니다.' })
-  @Public()
-  @Get('/geometry')
-  async getVolunteerWorkListByGeometry(
-    @Query() request: GetVolunteerRequestByGeometry,
-  ) {
-    const result =
-      await this.volunteerWorkService.searchListByGeometry(request);
-    return VolunteerWorkResponse.fromArray(result);
   }
 
   @ApiOperation({ summary: '봉사활동 목록을 조회합니다.' })

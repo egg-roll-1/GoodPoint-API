@@ -5,15 +5,11 @@ import { VolunteerRequestRepository } from '@core/domain/volunteer-request/repos
 import { VolunteerWorkStatus } from '@core/domain/volunteer-work/entity/volunteer-work.enum';
 import { VolunteerWorkException } from '@core/domain/volunteer-work/exception/volunteer-work.exception';
 import { VolunteerWorkRepository } from '@core/domain/volunteer-work/repository/volunteer-work.repository';
-import { Page } from '@core/global/dto/response/paging.response';
 import { EGException } from '@core/global/exception/exception';
 import { Injectable } from '@nestjs/common';
-import { In, Like } from 'typeorm';
+import { In } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
-import {
-  GetVolunteerRequest,
-  GetVolunteerRequestByGeometry,
-} from '../dto/request/query.request';
+import { GetVolunteerRequest } from '../dto/request/query.request';
 
 @Injectable()
 export class VolunteerWorkService {
@@ -22,58 +18,56 @@ export class VolunteerWorkService {
     private readonly volunteerRequestRepository: VolunteerRequestRepository,
   ) {}
 
-  public async searchListByGeometry(request: GetVolunteerRequestByGeometry) {
-    const { latitude, longitude, distanceKm } = request;
+  public async searchListByGeometry(request: GetVolunteerRequest) {
+    const { latitude, longitude, distanceKm, keyword } = request;
     const query = this.volunteerWorkRepository
       .createQueryBuilder('work')
-      .select()
       .leftJoinAndSelect('work.volunteerRequestList', 'request')
       .leftJoinAndSelect('work.agency', 'agency')
       .leftJoinAndSelect('agency.managerList', 'manager')
       .leftJoinAndSelect('work.tagList', 'tagList')
       .leftJoinAndSelect('tagList.tag', 'tag')
+      .addSelect(
+        `(
+          6371 * ACOS(
+            COS(RADIANS(:latitude)) * 
+            COS(RADIANS(work.latitude)) * 
+            COS(RADIANS(work.longitude) - RADIANS(:longitude)) + 
+            SIN(RADIANS(:latitude)) * 
+            SIN(RADIANS(work.latitude))
+          )
+        )`,
+        'distance',
+      )
       .where('work.status = :status', {
         status: VolunteerWorkStatus.Recruiting,
+      })
+      .andWhere(`work.latitude IS NOT NULL AND work.longitude IS NOT NULL`)
+      .andWhere(
+        `(
+            6371 * ACOS(
+              COS(RADIANS(:latitude)) * 
+              COS(RADIANS(work.latitude)) * 
+              COS(RADIANS(work.longitude) - RADIANS(:longitude)) + 
+              SIN(RADIANS(:latitude)) * 
+              SIN(RADIANS(work.latitude))
+            )
+          ) < :distanceKm`,
+      )
+      .setParameters({ latitude, longitude, distanceKm });
+
+    query.orderBy('distance', 'ASC');
+
+    if (keyword) {
+      query.andWhere(`work.title LIKE :keyword OR agency.title LIKE :keyword`, {
+        keyword: `%${keyword}%`,
       });
+    }
 
-    query.andWhere(`work.latitude IS NOT NULL AND work.longitude IS NOT NULL`);
-    query.andWhere(
-      `(
-        6371 * ACOS(
-            COS(RADIANS(:latitude)) * COS(RADIANS(work.latitude)) *
-            COS(RADIANS(work.longitude) - RADIANS(:longitude)) +
-            SIN(RADIANS(:latitude)) * SIN(RADIANS(work.latitude))
-        )
-    ) < :distanceKm`,
-      { latitude, longitude, distanceKm },
-    );
-
-    query.limit(800);
+    query.limit(2000);
 
     const workList = query.getMany();
     return workList;
-  }
-
-  public async searchList(request: GetVolunteerRequest) {
-    const { page, size, keyword } = request;
-    const [content, total] = await this.volunteerWorkRepository.findAndCount({
-      relations: {
-        volunteerRequestList: true,
-        agency: {
-          managerList: true,
-        },
-        tagList: {
-          tag: true,
-        },
-      },
-      where: {
-        title: keyword ? Like(`%${keyword}%`) : undefined,
-      },
-      skip: (page - 1) * size,
-      take: size,
-    });
-
-    return Page.createPageDto({ content, total, size, page });
   }
 
   async getDetail(id: number) {

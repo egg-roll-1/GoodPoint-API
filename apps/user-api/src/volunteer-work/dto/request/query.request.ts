@@ -1,9 +1,8 @@
-import { PagingRequest } from '@core/global/dto/request/paging.request';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class GetVolunteerRequestByGeometry {
+export class GetVolunteerRequest {
   @ApiPropertyOptional({ description: '위도 - 기본값: 숭실대 위치' })
   @IsOptional()
   @IsNumber()
@@ -16,14 +15,12 @@ export class GetVolunteerRequestByGeometry {
   @Type(() => Number)
   longitude?: number = 126.9572222;
 
-  @ApiPropertyOptional({ description: '범위 - 기본값: 5' })
+  @ApiPropertyOptional({ description: '범위 - 기본값: 10' })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  distanceKm: number = 5;
-}
+  distanceKm: number = 10;
 
-export class GetVolunteerRequest extends PagingRequest {
   @ApiPropertyOptional({ description: '검색어' })
   @IsOptional()
   @IsString()

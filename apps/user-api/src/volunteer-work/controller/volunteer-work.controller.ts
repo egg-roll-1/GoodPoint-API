@@ -4,11 +4,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '@core/application/auth/decorator/public.decorator';
 import { SignedUser } from '@core/application/auth/decorator/user.decorator';
 import { TokenUserDto } from '@core/application/auth/dto/token-user.dto';
-import { ApiPaginatedResponse } from '@core/global/decorator/swagger-paging-response.decorator';
-import {
-  GetVolunteerRequest,
-  GetVolunteerRequestByGeometry,
-} from '../dto/request/query.request';
+import { GetVolunteerRequest } from '../dto/request/query.request';
 import { VolunteerWorkDetailResponse } from '../dto/response/detail.response';
 import { VolunteerWorkResponse } from '../dto/response/volunteer-work.response';
 import { VolunteerWorkService } from '../service/volunteer-work.service';
@@ -17,17 +13,6 @@ import { VolunteerWorkService } from '../service/volunteer-work.service';
 @Controller('/volunteer-work')
 export class VolunteerWorkController {
   constructor(private readonly volunteerWorkService: VolunteerWorkService) {}
-
-  @ApiOperation({ summary: '위치기반으로 봉사활동 목록을 조회합니다.' })
-  @Public()
-  @Get('/geometry')
-  async getVolunteerWorkListByGeometry(
-    @Query() request: GetVolunteerRequestByGeometry,
-  ) {
-    const result =
-      await this.volunteerWorkService.searchListByGeometry(request);
-    return VolunteerWorkResponse.fromArray(result);
-  }
 
   @ApiBearerAuth()
   @ApiOperation({ summary: '봉사활동을 신청합니다.' })
@@ -49,13 +34,11 @@ export class VolunteerWorkController {
   }
 
   @ApiOperation({ summary: '봉사활동 목록을 조회합니다.' })
-  @ApiPaginatedResponse(VolunteerWorkResponse)
   @Public()
   @Get('')
   async getVolunteerWorkList(@Query() request: GetVolunteerRequest) {
-    const result = await this.volunteerWorkService.searchList(request);
-    return result.setContent(
-      await VolunteerWorkResponse.fromArray(result.content),
-    );
+    const result =
+      await this.volunteerWorkService.searchListByGeometry(request);
+    return await VolunteerWorkResponse.fromArray(result);
   }
 }

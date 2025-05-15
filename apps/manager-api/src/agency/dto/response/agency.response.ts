@@ -33,7 +33,9 @@ export class AgencyResponse {
       .id(agency.id)
       .title(agency.title)
       .type(agency.nationAgency)
-      .managerList(ManagerResponse.fromArray(agency.managerList))
+      .managerList(
+        ManagerResponse.fromArray(agency.managerList, agency.ownerManagerId),
+      )
       .build();
 
     return dto;

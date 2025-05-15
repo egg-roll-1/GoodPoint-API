@@ -3,7 +3,7 @@ import { Builder } from 'builder-pattern';
 
 import { VolunteerRequest } from '@core/domain/volunteer-request/entity/volunteer-request.entity';
 import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
-import { VolunteerWorkResponse } from 'apps/user-api/src/volunteer-work/dto/response/volunteer-work.response';
+import { VolunteerWorkResponse } from './volunteer-work.response';
 
 export class VolunteerRequestResponse {
   @ApiProperty({ description: '신청내역 id' })
@@ -16,26 +16,35 @@ export class VolunteerRequestResponse {
   })
   status: VolunteerRequestStatus;
 
-  @ApiProperty({
-    description: '신청한 봉사활동',
-    type: () => VolunteerWorkResponse,
-  })
+  @ApiProperty({ description: '사용자 ID' })
+  userId: number;
+
+  @ApiProperty({ description: '사용자 이름' })
+  name: string;
+
+  @ApiProperty({ description: '사용자 연락처' })
+  phoneNumber: string;
+
+  @ApiProperty({ description: '봉사활동' })
   volunteerWork: VolunteerWorkResponse;
 
-  static async from(entity: VolunteerRequest) {
-    const volunteerWork = await entity.volunteerWork;
+  static async from(request: VolunteerRequest) {
+    const user = await request.user;
     const dto = Builder(VolunteerRequestResponse)
-      .id(entity.id)
-      .status(entity.status)
-      .volunteerWork(await VolunteerWorkResponse.from(volunteerWork))
+      .id(request.id)
+      .status(request.status)
+      .userId(user.id)
+      .name(user.name)
+      .phoneNumber(user.phoneNumber)
+      .volunteerWork(VolunteerWorkResponse.from(await request.volunteerWork))
       .build();
 
     return dto;
   }
 
-  static async fromArray(entityList: VolunteerRequest[]) {
+  static async fromArray(requestList: VolunteerRequest[]) {
     const result: VolunteerRequestResponse[] = [];
-    for (const entity of entityList) {
+    for (const entity of requestList) {
       result.push(await VolunteerRequestResponse.from(entity));
     }
     return result;

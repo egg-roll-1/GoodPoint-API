@@ -29,7 +29,7 @@ export class VolunteerRequest extends EGBaseEntity {
 
   @ManyToOne(() => VolunteerWork)
   @JoinColumn({ name: 'volunteer_work_id' })
-  volunteerWork: VolunteerWork;
+  volunteerWork: Promise<VolunteerWork>;
 
   @Column({ name: 'volunteer_work_id', nullable: true })
   volunteerWorkId: number;

@@ -29,11 +29,11 @@ export class SignUpRequest {
   gender: Gender;
 
   /** 엔티티 변환 메서드 */
-  toEntity() {
+  toEntity(encryptedPassword: string) {
     return User.create({
       name: this.name,
       phoneNumber: this.phoneNumber,
-      password: this.password,
+      password: encryptedPassword,
       age: this.age,
       gender: this.gender,
     });

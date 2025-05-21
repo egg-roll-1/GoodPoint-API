@@ -9,7 +9,7 @@ export class ProductRepository extends Repository<Product> {
    */
   async findAvailableProducts(): Promise<Product[]> {
     return this.find({
-      where: { isSoldOut: false },
+      where: { soldOut: false },
     });
   }
 

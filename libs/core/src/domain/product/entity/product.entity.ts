@@ -1,33 +1,40 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
+import { Builder } from 'builder-pattern';
 
 @Entity({ name: 'product' })
 export class Product extends EGBaseEntity {
-  @Column({ name: 'product_ID' })
-  id: string;
+  @PrimaryGeneratedColumn({ name: 'product_id' })
+  id: number;
 
-  @Column({ name: 'product_Prize' })
+  @Column({ name: 'price' })
   price: number;
 
-  @Column({ name: 'product_Explain', nullable: true })
+  @Column({ name: 'description', nullable: true })
   description: string;
 
-  @Column({ name: 'product_Null' })
-  isSoldOut: boolean;
+  @Column({ name: 'sold_out' })
+  soldOut: boolean;
 
-  @Column({ name: 'product_Seller' })
+  @Column({ name: 'seller' })
   seller: string;
 
-  @Column({ name: 'product_SellerCall' })
+  @Column({ name: 'seller_phone' })
   sellerPhone: string;
 
-  @Column({ name: 'product_freight', nullable: true })
-  freight: string;
-
   /** 생성 메서드 */
-  static createOne(object: Partial<Product>): Product {
-    const product = new Product();
-    Object.assign(product, object);
-    return product;
+  private static builder() {
+    return Builder(Product);
+  }
+
+  static create(object: Pick<Product, 'price' | 'seller'> & Partial<Product>) {
+    return Product.builder()
+      .id(object.id)
+      .price(object.price)
+      .description(object.description)
+      .soldOut(object.soldOut)
+      .seller(object.seller)
+      .sellerPhone(object.sellerPhone)
+      .build();
   }
 }

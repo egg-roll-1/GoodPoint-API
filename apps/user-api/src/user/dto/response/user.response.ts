@@ -19,6 +19,9 @@ export class UserResponse {
   @ApiProperty({ description: '크레딧 잔액' })
   creditBalance: number;
 
+  @ApiProperty({ description: '나이' })
+  age: number;
+
   static from(user: User) {
     const balance = user.creditHistory.reduce((acc, x) => acc + x.amount, 0);
 
@@ -28,6 +31,7 @@ export class UserResponse {
       .phoneNumber(user.phoneNumber)
       .gender(user.gender)
       .creditBalance(balance)
+      .age(user.age)
       .build();
   }
 }

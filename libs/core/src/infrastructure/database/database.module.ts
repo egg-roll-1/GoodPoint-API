@@ -22,7 +22,7 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
         username: configService.get<string>(DB_USER),
         password: configService.get<string>(DB_PASSWORD),
         database: configService.get<string>(DB_DATABASE),
-        synchronize: true,
+        synchronize: false,
         autoLoadEntities: true,
         logging: false,
         entities: ['dist/**/*.entity.js'],

@@ -30,6 +30,7 @@ export class JwtUtils {
     const payload = {
       sub: ACCESS_TOKEN_SUBJECT,
       id: tokenUser.id,
+      authority: tokenUser.authority,
       type: ACCESS_TOKEN_TYPE,
     };
 

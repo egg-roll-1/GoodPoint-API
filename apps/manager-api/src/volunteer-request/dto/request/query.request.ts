@@ -1,6 +1,7 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
 import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsArray, IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 export class GetVolunteerRequestQuery {
@@ -28,10 +29,12 @@ export class GetVolunteerRequestQuery {
   @ApiPropertyOptional({ description: '봉사활동 시작 기간' })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   start?: Date;
 
   @ApiPropertyOptional({ description: '봉사활동 종료 기간' })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   end?: Date;
 }

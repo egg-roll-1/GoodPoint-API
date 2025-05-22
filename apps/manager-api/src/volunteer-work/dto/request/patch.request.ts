@@ -1,6 +1,7 @@
 import { DayOfWeek } from '@core/domain/enum/day.enum';
 import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -26,11 +27,13 @@ export class PatchVolunteerWorkRequest {
   @ApiPropertyOptional({ description: '봉사활동 시작일' })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   startDate?: Date;
 
   @ApiPropertyOptional({ description: '봉사활동 종료일' })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   endDate?: Date;
 
   @ApiPropertyOptional({ description: '시작시간' })
@@ -50,11 +53,13 @@ export class PatchVolunteerWorkRequest {
   @ApiPropertyOptional({ description: '모집 시작일' })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   recruitStartDate?: Date;
 
   @ApiPropertyOptional({ description: '모집 종료일' })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   recruitEndDate?: Date;
 
   @ApiPropertyOptional({
@@ -66,12 +71,6 @@ export class PatchVolunteerWorkRequest {
   @IsOptional()
   @IsEnum(DayOfWeek, { each: true })
   dayOfWeek?: DayOfWeek[];
-
-  @ApiPropertyOptional({ description: '봉사활동 인원' })
-  @IsInt()
-  @Min(0)
-  @IsOptional()
-  peopleCount?: number;
 
   @ApiPropertyOptional({ description: '모집 봉사활동 인원' })
   @IsInt()

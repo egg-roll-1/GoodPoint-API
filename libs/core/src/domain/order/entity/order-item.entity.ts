@@ -12,7 +12,7 @@ import { Order } from './order.entity';
 
 @Entity({ name: 'order_item' })
 export class OrderItem extends EGBaseEntity {
-  @PrimaryGeneratedColumn({ name: 'order_id' })
+  @PrimaryGeneratedColumn({ name: 'order_item_id' })
   id: number;
 
   @Column({ name: 'count', nullable: true })

@@ -63,6 +63,7 @@ export class VolunteerWorkService {
               isRemoved: false,
             },
           },
+          isRemoved: false,
         },
       })
       .catch(() => {
@@ -87,6 +88,7 @@ export class VolunteerWorkService {
             isRemoved: false,
           },
         },
+        isRemoved: false,
       },
       order: {
         updatedAt: 'DESC',

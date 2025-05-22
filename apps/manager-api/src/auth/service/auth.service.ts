@@ -19,7 +19,7 @@ export class AuthService {
   private readonly SALT_ROUND: number;
 
   constructor(
-    private readonly userRepository: ManagerRepository,
+    private readonly managerRepository: ManagerRepository,
     private readonly jwtUtils: JwtUtils,
     private readonly configService: ConfigService,
   ) {
@@ -40,7 +40,7 @@ export class AuthService {
       throw new EGException(UserException.ALREADY_EXIST);
     }
 
-    const savedUser = await this.userRepository.save(toSaveUser);
+    const savedUser = await this.managerRepository.save(toSaveUser);
     return await this.doLogin(savedUser);
   }
 
@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   private async findByPhoneNumber(phoneNumber: string) {
-    return await this.userRepository.findOne({
+    return await this.managerRepository.findOne({
       where: {
         phoneNumber,
         isRemoved: false,

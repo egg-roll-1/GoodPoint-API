@@ -14,6 +14,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(req: Request) {
+    // todo role 검증 적용
+    // const ALLOWED_ROLE = new Set([Authority.ROLE_USER]);
+
     try {
       const token = await this.jwtUtils.extractAccessTokenFromHeader(req);
       const user = await this.jwtUtils.verifyAccessTokenWithExpiration(token);
@@ -21,6 +24,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       if (user.authority === Authority.ROLE_MANAGER) {
         throw new EGException(AuthException.UN_AUTHORIZED);
       }
+
+      // if (!ALLOWED_ROLE.has(user.authority)) {
+      //   throw new EGException(AuthException.UN_AUTHORIZED);
+      // }
 
       return user;
     } catch (error) {

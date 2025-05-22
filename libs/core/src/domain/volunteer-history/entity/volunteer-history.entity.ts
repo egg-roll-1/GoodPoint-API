@@ -30,7 +30,7 @@ export class VolunteerHistory extends EGBaseEntity {
   /*연관관계*/
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Promise<User>;
 
   @Column({ name: 'user_id', nullable: true })
   userId: number;
@@ -58,6 +58,8 @@ export class VolunteerHistory extends EGBaseEntity {
   ) {
     return Builder(VolunteerHistory)
       .id(object.id)
+      .volunteerWorkId(object.volunteerWorkId)
+      .userId(object.userId)
       .startDateTime(object.startDateTime)
       .endDateTime(object.endDateTime)
       .minute(

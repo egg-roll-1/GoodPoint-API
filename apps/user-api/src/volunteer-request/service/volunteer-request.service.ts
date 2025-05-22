@@ -23,11 +23,17 @@ export class VolunteerRequestService {
           tagList: {
             tag: true,
           },
+          agency: {
+            managerList: true,
+          },
           volunteerRequestList: true,
         },
       },
       where: {
         userId,
+        volunteerWork: {
+          isRemoved: false,
+        },
       },
       order: {
         createdAt: 'DESC',

@@ -5,7 +5,7 @@ export class VolunteerRequestException {
   static readonly NOT_FOUND: ErrorInfo = {
     status: HttpStatus.NOT_FOUND,
     code: 'VR001',
-    message: '존재하지 않는 봉사신청내역입니다.',
+    message: '봉사신청내역이 존재하지 않습니다.',
   };
 
   static readonly ALREADY_EXIST: ErrorInfo = {

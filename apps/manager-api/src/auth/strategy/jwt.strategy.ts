@@ -14,11 +14,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(req: Request) {
+    const ALLOWED_ROLE = new Set([Authority.ADMIN, Authority.ROLE_MANAGER]);
+
     try {
       const token = await this.jwtUtils.extractAccessTokenFromHeader(req);
       const user = await this.jwtUtils.verifyAccessTokenWithExpiration(token);
 
-      if (user.authority === Authority.ROLE_USER) {
+      if (!ALLOWED_ROLE.has(user.authority)) {
         throw new EGException(AuthException.UN_AUTHORIZED);
       }
 

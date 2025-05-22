@@ -8,17 +8,23 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Max,
-  MaxLength,
   Min,
 } from 'class-validator';
-import { VolunteerRequestResponse } from './volunteer-request.response';
 
-export class VolunteerWorkDetailResponse {
+export class VolunteerWorkResponse {
   @ApiProperty({ description: '봉사활동 ID' })
   id: number;
+
+  @ApiProperty({ description: '제목' })
+  title: string;
+
+  @ApiProperty({ description: '공지사항' })
+  notice: string;
+
+  @ApiProperty({ description: '최대 인정 시간' })
+  maxHour: number;
 
   @ApiProperty({ description: '봉사활동 기관 ID' })
   @IsInt()
@@ -71,12 +77,6 @@ export class VolunteerWorkDetailResponse {
   @Min(0)
   recruitPeopleCount: number;
 
-  @ApiProperty({ description: '봉사 안내' })
-  @MaxLength(1000)
-  @IsString()
-  @IsOptional()
-  notice: string;
-
   @ApiProperty({ description: '봉사활동 주소 - 서울특별시 동작구 ...' })
   @IsNotEmpty()
   @IsString()
@@ -87,21 +87,17 @@ export class VolunteerWorkDetailResponse {
   @IsString()
   workPlace: string;
 
-  @ApiProperty({
-    description: '신청자 목록',
-    type: VolunteerRequestResponse,
-    isArray: true,
-  })
-  requestList: VolunteerRequestResponse[];
-
-  static async from(volunteerWork: VolunteerWork) {
+  static from(volunteerWork: VolunteerWork) {
     const ignoreRequestStatus = new Set([
       VolunteerRequestStatus.Canceled,
       VolunteerRequestStatus.Reject,
     ]);
 
-    return Builder(VolunteerWorkDetailResponse)
+    return Builder(VolunteerWorkResponse)
       .id(volunteerWork.id)
+      .title(volunteerWork.title)
+      .notice(volunteerWork.notice)
+      .maxHour(volunteerWork.maxHour)
       .agencyId(volunteerWork.agencyId)
       .startDate(volunteerWork.startDate)
       .endDate(volunteerWork.endDate)
@@ -119,18 +115,13 @@ export class VolunteerWorkDetailResponse {
       .notice(volunteerWork.notice)
       .workAddress(volunteerWork.workAddress)
       .workPlace(volunteerWork.workPlace)
-      .requestList(
-        await VolunteerRequestResponse.fromArray(
-          volunteerWork.volunteerRequestList,
-        ),
-      )
       .build();
   }
 
-  static async fromArray(volunteerWorkList: VolunteerWork[]) {
-    const result: VolunteerWorkDetailResponse[] = [];
+  static fromArray(volunteerWorkList: VolunteerWork[]) {
+    const result: VolunteerWorkResponse[] = [];
     for (const volunteerWork of volunteerWorkList) {
-      result.push(await VolunteerWorkDetailResponse.from(volunteerWork));
+      result.push(VolunteerWorkResponse.from(volunteerWork));
     }
     return result;
   }

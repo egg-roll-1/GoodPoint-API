@@ -14,7 +14,6 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PatchVolunteerWorkRequest } from '../dto/request/patch.request';
 import { PostVolunteerWorkRequest } from '../dto/request/post.request';
 import { GetVolunteerWorkRequest } from '../dto/request/query.request';
-import { VolunteerWorkDetailResponse } from '../dto/response/detail.response';
 import { VolunteerWorkResponse } from '../dto/response/list.response';
 import { VolunteerWorkService } from '../service/volunteer-work.service';
 
@@ -54,7 +53,7 @@ export class VolunteerWorkController {
     const { id: userId } = tokenUser;
     const volunteerWork = await this.volunteerWorkService.getDetail(userId, id);
 
-    return await VolunteerWorkDetailResponse.from(volunteerWork);
+    return VolunteerWorkResponse.from(volunteerWork);
   }
 
   @ApiOperation({ summary: '봉사활동을 등록합니다.' })
@@ -64,7 +63,11 @@ export class VolunteerWorkController {
     @Body() request: PostVolunteerWorkRequest,
   ) {
     const { id: managerId } = tokenUser;
-    await this.volunteerWorkService.register(managerId, request);
+    const volunteerWork = await this.volunteerWorkService.register(
+      managerId,
+      request,
+    );
+    return volunteerWork.id;
   }
 
   @ApiOperation({ summary: '봉사활동을 조회합니다.' })

@@ -100,6 +100,7 @@ export class VolunteerWorkService {
       .findOneOrFail({
         where: {
           id: volunteerWorkId,
+          isRemoved: false,
         },
       })
       .catch(() => {

@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  Matches,
   MaxLength,
   Min,
   MinLength,
@@ -15,6 +16,7 @@ export class SignUpRequest {
   @ApiProperty({ description: '전화번호' })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\d+$/, { message: '전화번호는 숫자만 포함해야 합니다.' })
   phoneNumber: string;
 
   @ApiProperty({ description: '비밀번호' })

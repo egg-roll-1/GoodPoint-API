@@ -8,6 +8,7 @@ export class VolunteerHistoryService {
   public async findHistory(userId: number) {
     return await this.volunteerHistoryRepository.find({
       relations: {
+        user: true,
         volunteerWork: {
           volunteerRequestList: true,
         },

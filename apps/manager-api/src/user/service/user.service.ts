@@ -1,20 +1,17 @@
+import { ManagerRepository } from '@core/domain/manager/repository/manager.repository';
 import { UserException } from '@core/domain/user/exception/user.exception';
-import { UserRepository } from '@core/domain/user/repository/user.repository';
 import { AsyncTimeLogger } from '@core/global/decorator/time.decorator';
 import { EGException } from '@core/global/exception/exception';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UserService {
-  constructor(private userRepository: UserRepository) {}
+export class ManagerService {
+  constructor(private managerRepository: ManagerRepository) {}
 
   @AsyncTimeLogger()
   async getUserProfile(userId: number) {
-    return await this.userRepository
+    return await this.managerRepository
       .findOneOrFail({
-        relations: {
-          creditHistory: true,
-        },
         where: {
           id: userId,
         },

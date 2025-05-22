@@ -5,12 +5,12 @@ import {
 import { INestApplication } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AdminAppModule } from './app.module';
+import { ManagerAppModule } from './app.module';
 import { JwtAuthGuard } from './auth/guard/jwt.guard';
 
 async function bootstrap() {
   initializeBeforeApplication();
-  const app = await NestFactory.create(AdminAppModule);
+  const app = await NestFactory.create(ManagerAppModule);
   initializeApplication(app);
   initializeSwagger(app);
 

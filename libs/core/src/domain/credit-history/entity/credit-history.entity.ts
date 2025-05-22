@@ -1,3 +1,4 @@
+import { Order } from '@core/domain/order/entity/order.entity';
 import { User } from '@core/domain/user/entity/user.entity';
 import { VolunteerHistory } from '@core/domain/volunteer-history/entity/volunteer-history.entity';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
@@ -26,6 +27,13 @@ export class CreditHistory extends EGBaseEntity {
 
   @Column({ name: 'user_id', default: null })
   userId: number;
+
+  @ManyToOne(() => Order)
+  @JoinColumn({ name: 'order_id' })
+  order: Promise<Order>;
+
+  @Column({ name: 'order_id', default: null })
+  orderid: number;
 
   @OneToOne(() => VolunteerHistory, (history) => history.creditHistory)
   volunteerHistory: Promise<VolunteerHistory>;

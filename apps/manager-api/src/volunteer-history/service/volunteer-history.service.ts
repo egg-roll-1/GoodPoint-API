@@ -1,13 +1,18 @@
 import { CreditHistory } from '@core/domain/credit-history/entity/credit-history.entity';
 import { CreditHistoryRepository } from '@core/domain/credit-history/repository/credit-history.repository';
+import { UserRepository } from '@core/domain/user/repository/user.repository';
 import { VolunteerHistoryException } from '@core/domain/volunteer-history/exception/volunteer-history.exception';
 import { VolunteerHistoryRepository } from '@core/domain/volunteer-history/repository/volunteer-history.repository';
+import { VolunteerRequestStatus } from '@core/domain/volunteer-request/entity/volunteer-request.enum';
+import { VolunteerRequestException } from '@core/domain/volunteer-request/exception/volunteer-request.exception';
+import { VolunteerRequestRepository } from '@core/domain/volunteer-request/repository/volunteer-request.repository';
 import { VolunteerWorkException } from '@core/domain/volunteer-work/exception/volunteer-work.exception';
 import { VolunteerWorkRepository } from '@core/domain/volunteer-work/repository/volunteer-work.repository';
+import { AsyncTimeLogger } from '@core/global/decorator/time.decorator';
 import { EGException } from '@core/global/exception/exception';
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 import { PostVolunteerHistoryRequest } from '../dto/request/post.request';
 import { GetVolunteerHistoryRequest } from '../dto/request/query.request';
@@ -15,9 +20,11 @@ import { GetVolunteerHistoryRequest } from '../dto/request/query.request';
 @Injectable()
 export class VolunteerHistoryService {
   constructor(
+    private readonly userRepository: UserRepository,
     private readonly creditRepository: CreditHistoryRepository,
     private readonly volunteerWorkRepository: VolunteerWorkRepository,
     private readonly volunteerHistoryRepository: VolunteerHistoryRepository,
+    private readonly volunteerRequestRepository: VolunteerRequestRepository,
   ) {}
 
   @Transactional()
@@ -32,29 +39,13 @@ export class VolunteerHistoryService {
     managerId: number,
     request: PostVolunteerHistoryRequest,
   ) {
-    await this.findVolunteerWorkOrThrow(managerId);
-    const { volunteerWorkId, userId } = request;
+    await this.authorizeVolunteerWorkOrThrow(
+      managerId,
+      request.volunteerWorkId,
+    );
+    await this.isValidVolunteerHistoryRequestOrThrow(request);
 
-    // 해당 일에 이미 출석 내역이 존재하는지 확인합니다.
-    const findExistOrThrow = async () => {
-      const startOfDate = dayjs().startOf('day').toDate();
-      const endOfDate = dayjs().endOf('day').toDate();
-
-      const volunteerHistory = await this.volunteerHistoryRepository.findOne({
-        where: {
-          volunteerWorkId,
-          userId,
-          startDateTime: Between(startOfDate, endOfDate),
-        },
-      });
-
-      if (volunteerHistory) {
-        throw new EGException(VolunteerHistoryException.ALREADY_EXIST);
-      }
-    };
-
-    await findExistOrThrow();
-
+    const { userId } = request;
     const _volunteerHistory = request.toEntity();
     const credit = await this.creditRepository.save(
       CreditHistory.create({ userId, amount: _volunteerHistory.minute * 20 }),
@@ -64,13 +55,64 @@ export class VolunteerHistoryService {
     return await this.volunteerHistoryRepository.save(_volunteerHistory);
   }
 
-  private async findVolunteerWorkOrThrow(userId: number) {
+  private async isValidVolunteerHistoryRequestOrThrow(
+    request: PostVolunteerHistoryRequest,
+  ) {
+    await this.isRequestExistOrThrow(request);
+    await this.isDoubleHistoryThenThrow(request);
+  }
+
+  private async isRequestExistOrThrow(request: PostVolunteerHistoryRequest) {
+    const { volunteerWorkId, userId } = request;
+    return await this.volunteerRequestRepository
+      .findOneOrFail({
+        where: {
+          status: In([
+            VolunteerRequestStatus.Wait,
+            VolunteerRequestStatus.Approve,
+          ]),
+          volunteerWorkId,
+          userId,
+          isRemoved: false,
+        },
+      })
+      .catch(() => {
+        throw new EGException(VolunteerRequestException.NOT_FOUND);
+      });
+  }
+
+  private async isDoubleHistoryThenThrow(request: PostVolunteerHistoryRequest) {
+    const { volunteerWorkId, userId, startDateTime, endDateTime } = request;
+
+    const start = dayjs(startDateTime).startOf('day').toDate();
+    const end = dayjs(endDateTime).endOf('day').toDate();
+
+    const volunteerHistory = await this.volunteerHistoryRepository.findOne({
+      where: {
+        volunteerWorkId,
+        userId,
+        startDateTime: LessThanOrEqual(end),
+        endDateTime: MoreThanOrEqual(start),
+      },
+    });
+
+    if (volunteerHistory) {
+      throw new EGException(VolunteerHistoryException.ALREADY_EXIST);
+    }
+  }
+
+  private async authorizeVolunteerWorkOrThrow(
+    managerId: number,
+    volunteerWorkId: number,
+  ) {
     return await this.volunteerWorkRepository
       .findOneOrFail({
         where: {
+          id: volunteerWorkId,
+          isRemoved: false,
           agency: {
             managerList: {
-              id: userId,
+              id: managerId,
             },
           },
         },
@@ -99,18 +141,25 @@ export class VolunteerHistoryService {
     return volunteerHistory;
   }
 
+  @AsyncTimeLogger()
   public async findHistory(
-    userId: number,
+    managerId: number,
     request: GetVolunteerHistoryRequest,
   ) {
     const { volunteerWorkId, startDateTime, endDateTime } = request;
     const historyList = await this.volunteerHistoryRepository.find({
+      relations: {
+        user: true,
+        volunteerWork: {
+          volunteerRequestList: true,
+        },
+      },
       where: {
         volunteerWorkId,
         volunteerWork: {
           agency: {
             managerList: {
-              id: userId,
+              id: managerId,
             },
           },
         },

@@ -87,6 +87,9 @@ export class VolunteerWorkResponse {
   @IsString()
   workPlace: string;
 
+  @ApiProperty({ description: '봉사활동 활동일' })
+  dateList: Date[];
+
   static from(volunteerWork: VolunteerWork) {
     const ignoreRequestStatus = new Set([
       VolunteerRequestStatus.Canceled,
@@ -115,6 +118,7 @@ export class VolunteerWorkResponse {
       .notice(volunteerWork.notice)
       .workAddress(volunteerWork.workAddress)
       .workPlace(volunteerWork.workPlace)
+      .dateList(volunteerWork.getDateList())
       .build();
   }
 

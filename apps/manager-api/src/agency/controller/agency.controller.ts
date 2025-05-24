@@ -2,10 +2,10 @@ import { SignedUser } from '@core/application/auth/decorator/user.decorator';
 import { TokenUserDto } from '@core/application/auth/dto/token-user.dto';
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PatchAgencyRequest } from '../dto/request/patch.request';
 import { PostAgencyRequest } from '../dto/request/post.request';
 import { AgencyResponse } from '../dto/response/agency.response';
 import { AgencyService } from '../service/agency.service';
-import { PatchAgencyRequest } from '../dto/request/patch.request';
 
 @ApiBearerAuth()
 @ApiTags('Agency API')
@@ -46,7 +46,8 @@ export class AgencyController {
     @Body() request: PostAgencyRequest,
   ) {
     const { id: managerId } = tokenUser;
-    await this.agencyService.registerAgency(managerId, request);
+    const agency = await this.agencyService.registerAgency(managerId, request);
+    return agency.id;
   }
 
   @ApiOperation({ summary: '봉사기관 조회' })

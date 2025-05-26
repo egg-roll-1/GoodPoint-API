@@ -1,7 +1,7 @@
 import { ErrorInfo } from '@core/global/exception/code.exception';
 import { HttpStatus } from '@nestjs/common';
 
-export class ProductException {
+export class OrderException {
   static readonly NOT_FOUND: ErrorInfo = {
     status: HttpStatus.NOT_FOUND,
     code: 'PE001',

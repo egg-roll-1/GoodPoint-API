@@ -1,5 +1,6 @@
-import { DayOfWeek } from '@core/domain/enum/day.enum';
+import { DayOfWeek, DayOfWeekList } from '@core/domain/enum/day.enum';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
+import { KSTDate } from '@core/global/utils/date';
 import { Builder } from 'builder-pattern';
 import { Agency } from 'libs/core/src/domain/agency/entity/agency.entity';
 import { VolunteerHistory } from 'libs/core/src/domain/volunteer-history/entity/volunteer-history.entity';
@@ -134,5 +135,21 @@ export class VolunteerWork extends EGBaseEntity {
       .latitude(object.latitude)
       .agencyId(object.agencyId)
       .build();
+  }
+
+  public getDateList() {
+    const dayOfWeek = new Set(this.dayOfWeek);
+    const startDate = KSTDate(this.startDate).startOf('day');
+    const endDate = KSTDate(this.endDate).startOf('day').add(1, 'day');
+
+    const result: Date[] = [];
+    for (let cur = startDate; cur.isBefore(endDate); cur = cur.add(1, 'day')) {
+      const day = DayOfWeekList[cur.day()];
+      if (dayOfWeek.has(day)) {
+        result.push(cur.toDate());
+      }
+    }
+
+    return result;
   }
 }

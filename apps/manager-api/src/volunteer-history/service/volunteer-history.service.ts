@@ -27,13 +27,15 @@ export class VolunteerHistoryService {
     private readonly volunteerRequestRepository: VolunteerRequestRepository,
   ) {}
 
+  @AsyncTimeLogger()
   @Transactional()
   public async removeHistory(managerId: number, id: number) {
     const history = await this.findOneHistoryOrThrow(managerId, id);
-    await this.creditRepository.delete(history.creditHistoryId);
     await this.volunteerHistoryRepository.delete(history.id);
+    await this.creditRepository.delete(history.creditHistoryId);
   }
 
+  @AsyncTimeLogger()
   @Transactional()
   public async handleHistory(
     managerId: number,

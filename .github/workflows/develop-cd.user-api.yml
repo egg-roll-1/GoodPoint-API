@@ -18,15 +18,15 @@ jobs:
     runs-on: [self-hosted, develop]
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
     steps:
-      - name: Create .env.development file
+      - name: Create .env.dev file
         env:
           ENV_DEVELOP_BASE64: ${{ secrets.ENV_DEVELOP_BASE64 }}
         run: |
-          echo "$ENV_DEVELOP_BASE64" | base64 -d > .env.development
+          echo "$ENV_DEVELOP_BASE64" | base64 -d > .env.dev
 
-      - name: Read Port from .env.development
+      - name: Read Port from .env.dev
         run: |
-          echo "PORT=$(grep -w 'USER_API_PORT' .env.development | cut -d '=' -f2)" >> $GITHUB_ENV
+          echo "PORT=$(grep -w 'USER_API_PORT' .env.dev | cut -d '=' -f2)" >> $GITHUB_ENV
 
       - name: Pull Docker image
         run: sudo docker pull $DOCKER_USERNAME/$DOCKER_REPOSITORY:$SERVICE_NAME-latest
@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          sudo docker run -d -p ${PORT}:${PORT} --env-file .env.development \
+          sudo docker run -d -p ${PORT}:${PORT} --env-file .env.dev \
           --network be-network \
           --restart always \
           --name $SERVICE_NAME $DOCKER_USERNAME/$DOCKER_REPOSITORY:$SERVICE_NAME-latest

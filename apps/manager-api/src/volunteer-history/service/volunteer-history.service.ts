@@ -50,7 +50,10 @@ export class VolunteerHistoryService {
     const { userId } = request;
     const _volunteerHistory = request.toEntity();
     const credit = await this.creditRepository.save(
-      CreditHistory.create({ userId, amount: _volunteerHistory.minute * 20 }),
+      CreditHistory.create({
+        userId,
+        amount: Math.round(_volunteerHistory.minute / 60) * 100,
+      }),
     );
 
     _volunteerHistory.creditHistoryId = credit.id;

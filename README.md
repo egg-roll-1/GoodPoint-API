@@ -1,23 +1,15 @@
 # Eggroll API Server
 
-## Sheet
-
-```
-npm run start:dev
-ALT+SHIFT+O: import 정리
-git pull --rebase
-```
-
-## Application
+## Getting Started
 
 ```
 # 프로젝트 다운받기
-git clone https://github.com/egg-roll-1/eggroll-server.git
+git clone https://github.com/egg-roll-1/Good-Point-API.git
 
 # 프로젝트 내부로 이동.
-cd eggroll-server
+cd Good-Point-API
 
-# +VScode에서 Open Folder로 정확히 위 폴더를 선택해야 터미널이 자동으로 여기가 열려서 편합니다.
+# +VScode에서 Open Folder로 정확히 이 폴더를 선택해야 터미널이 자동으로 여기가 열려서 편합니다.
 
 # 의존성 설치
 npm i
@@ -26,6 +18,7 @@ npm i
 ## DB 설정
 
 ```
+# MYSQL
 CREATE DATABASE eggroll;
 ```
 
@@ -41,14 +34,14 @@ MANAGER_API_PORT=3001
 
 DB_DATABASE=eggroll
 DB_HOST=127.0.0.1
-DB_USER=admin
-DB_PASSWORD=temppassword
+DB_USER=
+DB_PASSWORD=
 DB_PORT=3306
 
 ACCESS_TOKEN_KEY=asdfoihawefiower923ehsdflaisdf9023hriwleflsihfalskdf2390rhfsodfsdfsdf
 REFRESH_TOKEN_KEY=sdfoin23r9ewfjsdfilasdfjw9r02j3rlkwefjsdfpmo23ippruje9w0fjsdilfjsdf
 
-SALT_ROUND=8
+SALT_ROUND=1
 ```
 
 ## 실행
@@ -58,14 +51,14 @@ SALT_ROUND=8
 npm run user-api:local
 
 # 봉사활동 제공자 API
-npm run admin-api:local
+npm run manager-api:local
 ```
 
 ## 디렉토리 구조
 
 ```
 apps
-└─ admin-api : 봉사활동 담당자 관련 API를 제공합니다.
+└─ manager-api : 봉사활동 담당자 관련 API를 제공합니다.
     └─ src
         └─ [feature]
             └─ controller

@@ -1,5 +1,5 @@
 import { Agency } from '@core/domain/agency/entity/agency.entity';
-import { Authority } from '@core/domain/user/entity/user.enum';
+import { Authority, Gender } from '@core/domain/user/entity/user.enum';
 import { EGBaseEntity } from '@core/global/entity/base.entity';
 import { Builder } from 'builder-pattern';
 import {
@@ -26,6 +26,12 @@ export class Manager extends EGBaseEntity {
   @Column({ name: 'password' })
   password: string;
 
+  @Column({ name: 'age', default: null })
+  age: number;
+
+  @Column({ name: 'gender', default: null })
+  gender: Gender;
+
   @Column({ name: 'authority', default: Authority.ROLE_MANAGER })
   authority: Authority = Authority.ROLE_MANAGER;
 
@@ -49,6 +55,8 @@ export class Manager extends EGBaseEntity {
       .id(object.id)
       .name(object.name)
       .phoneNumber(object.phoneNumber)
+      .gender(object.gender)
+      .age(object.age)
       .password(object.password)
       .agencyId(object.agencyId)
       .build();

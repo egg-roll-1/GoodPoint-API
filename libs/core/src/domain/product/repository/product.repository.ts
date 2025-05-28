@@ -23,4 +23,7 @@ export class ProductRepository extends Repository<Product> {
   }
 
   // 여기에 필요시 다른 제품 관련 쿼리 메서드도 추가 가능
+  async findById(id: number): Promise<Product | null> {
+    return this.findOne({ where: { id } });
+  }
 }

@@ -42,7 +42,8 @@ export class OrderItem extends EGBaseEntity {
   }
 
   static create(
-    object: Pick<OrderItem, 'count' | 'productId'> & Partial<OrderItem>,
+    object: Pick<OrderItem, 'count' | 'price' | 'productId' | 'orderId'> &
+      Partial<OrderItem>,
   ) {
     return Builder(OrderItem)
       .id(object.id)

@@ -8,6 +8,7 @@ import { VolunteerHistoryDomainModule } from './volunteer-history/volunteer-hist
 import { VolunteerRequestDomainModule } from './volunteer-request/volunteer-request.module';
 import { VolunteerWorkDomainModule } from './volunteer-work/volunteer-work.module';
 import { ProductDomainModule } from './product/module/module';
+import { OrderDomainModule } from './order/module/module';
 
 const MODULE_LIST = [
   UserDomainModule,
@@ -19,6 +20,7 @@ const MODULE_LIST = [
   CreditHistoryDomainModule,
   TagDomainModule,
   ProductDomainModule,
+  OrderDomainModule,
 ];
 
 @Module({

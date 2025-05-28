@@ -31,10 +31,24 @@ export class Order extends EGBaseEntity {
   @OneToMany(() => CreditHistory, (history) => history.order)
   payHistory: CreditHistory[];
 
+  getTotalAmount() {
+    return this.itemList.reduce(
+      (acc, item) => acc + item.price * item.count,
+      0,
+    );
+  }
+
   /** 생성 메서드 */
   private static builder() {
     return Builder(Order);
   }
 
-  static create() {}
+  static create(object: Pick<Order, 'userId'> & Partial<Order>) {
+    return Order.builder()
+      .id(object.id)
+      .userId(object.userId)
+      .itemList(object.itemList)
+      .payHistory(object.payHistory)
+      .build();
+  }
 }

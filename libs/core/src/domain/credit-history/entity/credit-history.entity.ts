@@ -33,7 +33,7 @@ export class CreditHistory extends EGBaseEntity {
   order: Promise<Order>;
 
   @Column({ name: 'order_id', default: null })
-  orderid: number;
+  orderId: number;
 
   @OneToOne(() => VolunteerHistory, (history) => history.creditHistory)
   volunteerHistory: Promise<VolunteerHistory>;
@@ -49,6 +49,7 @@ export class CreditHistory extends EGBaseEntity {
       .id(object.id)
       .amount(object.amount)
       .userId(object.userId)
+      .orderId(object.orderId)
       .expiredAt(object.expiredAt ?? dayjs().add(3, 'year').toDate())
       .build();
   }

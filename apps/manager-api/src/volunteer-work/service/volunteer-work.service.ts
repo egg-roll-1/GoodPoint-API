@@ -7,18 +7,26 @@ import { Transactional } from 'typeorm-transactional';
 import { PatchVolunteerWorkRequest } from '../dto/request/patch.request';
 import { PostVolunteerWorkRequest } from '../dto/request/post.request';
 import { GetVolunteerWorkRequest } from '../dto/request/query.request';
+import { GeoService } from '@core/infrastructure/openapi/geo.service';
+import { VolunteerWork } from '@core/domain/volunteer-work/entity/volunteer-work.entity';
 
 @Injectable()
 export class VolunteerWorkService {
   constructor(
     private readonly agencyRepository: AgencyRepository,
     private readonly volunteerWorkRepository: VolunteerWorkRepository,
+    private readonly geoService: GeoService,
   ) {}
 
   @Transactional()
   public async register(managerId: number, request: PostVolunteerWorkRequest) {
     await this.agencyRepository.findOneOrThrow(managerId, request.agencyId);
-    return await this.volunteerWorkRepository.save(request.toEntity());
+    const volunteerWork = await this.volunteerWorkRepository.save(
+      request.toEntity(),
+    );
+
+    await this.applyCoord(volunteerWork);
+    return volunteerWork;
   }
 
   @Transactional()
@@ -27,12 +35,17 @@ export class VolunteerWorkService {
     volunteerWorkId: number,
     request: PatchVolunteerWorkRequest,
   ) {
-    const volunteerWork = await this.findVolunteerWorkOrThrow(
+    const _volunteerWork = await this.findVolunteerWorkOrThrow(
       managerId,
       volunteerWorkId,
     );
 
-    await this.volunteerWorkRepository.save(request.toEntity(volunteerWork));
+    const volunteerWork = await this.volunteerWorkRepository.save(
+      request.toEntity(_volunteerWork),
+    );
+
+    await this.applyCoord(volunteerWork);
+    return volunteerWork;
   }
 
   @Transactional()
@@ -114,5 +127,20 @@ export class VolunteerWorkService {
       .catch(() => {
         throw new EGException(VolunteerWorkException.NOT_FOUND);
       });
+  }
+
+  @Transactional()
+  private async applyCoord(volunteerWork: VolunteerWork) {
+    const { latitude, longitude } = await this.geoService.addressToCoord(
+      volunteerWork.workAddress,
+    );
+
+    volunteerWork.latitude = latitude;
+    volunteerWork.longitude = longitude;
+
+    await this.volunteerWorkRepository.update(volunteerWork.id, {
+      latitude,
+      longitude,
+    });
   }
 }
